@@ -266,7 +266,7 @@ class DatabaseConnectionApp {
 //                    int questionMarks = row.getInt("question_marks");
 //
 //
-//                    // This is a simplified example
+//
 //                    double percentageScore = correctAnswer ? questionMarks : 0;
 //
 //                    // Add the calculated score to the result
@@ -324,71 +324,71 @@ class DatabaseConnectionApp {
 //            }
 
             //5:Generate a report sheet of the scores for all pupils in each of the exams done and rank them from the highest average score to lowest.
-//            try {
-//                // Define the columns to select, including subject scores and overall average
-//                List<String> columns = Arrays.asList(
-//                        "S.student_id",
-//                        "S.first_name",
-//                        "S.last_name",
-//                        "SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) AS English_Score",
-//                        "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) AS Mathematics_Score",
-//                        "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) AS Science_Score",
-//                        "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) AS Kiswahili_Score",
-//                        "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)) AS SSRE_Score",
-//                        "(SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0))) AS Total_Score",
-//                        "((SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)))/5) AS Average_Score"
-//                );
-//
-//                // Define the JOIN clauses to include in the query
-//                List<String> joinClauses = Arrays.asList(
-//                        "JOIN Responses R ON S.student_id = R.student_id",
-//                        "JOIN Options O ON R.option_id = O.option_id AND O.correct_answer = 1",
-//                        "JOIN Questions Q ON R.questions_id = Q.questions_id",
-//                        "JOIN Exam E ON Q.exam_id = E.exam_id",
-//                        "JOIN Subjects sub ON E.subject_id = sub.subject_id"
-//                );
-//
-//                // Define the GROUP BY clause
-//                String groupBy = "S.student_id, S.first_name, S.last_name";
-//
-//                // Execute the query and get the results
-//                JSONArray results = Exam.selectExam(connection, "Student S", columns, null, groupBy, null, null, joinClauses);
-//
-//                // Write the results to a CSV file
-//                FileWriter csvWriter = new FileWriter("output.csv");
-//                csvWriter.append("Student ID,First Name,Last Name,English Score,Mathematics Score,Science Score,Kiswahili Score,SSRE Score,Total Score,Average Score\n");
-//
-//                for (int i = 0; i < results.length(); i++) {
-//                    JSONObject row = results.getJSONObject(i);
-//                    csvWriter.append(row.getInt("student_id") + ",");
-//                    csvWriter.append(row.getString("first_name") + ",");
-//                    csvWriter.append(row.getString("last_name") + ",");
-//                    csvWriter.append(row.getDouble("English_Score") + ",");
-//                    csvWriter.append(row.getDouble("Mathematics_Score") + ",");
-//                    csvWriter.append(row.getDouble("Science_Score") + ",");
-//                    csvWriter.append(row.getDouble("Kiswahili_Score") + ",");
-//                    csvWriter.append(row.getDouble("SSRE_Score") + ",");
-//                    csvWriter.append(row.getDouble("Total_Score") + ",");
-//                    csvWriter.append(row.getDouble("Average_Score") + "\n");
-//                }
-//
-//                csvWriter.flush();
-//                csvWriter.close();
-//
-//                System.out.println("CSV Report sheet file created successfully.");
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                // Define the columns to select, including subject scores and overall average
+                List<String> columns = Arrays.asList(
+                        "S.student_id",
+                        "S.first_name",
+                        "S.last_name",
+                        "SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) AS English_Score",
+                        "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) AS Mathematics_Score",
+                        "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) AS Science_Score",
+                        "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) AS Kiswahili_Score",
+                        "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)) AS SSRE_Score",
+                        "(SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) + " +
+                                "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) + " +
+                                "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
+                                "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
+                                "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0))) AS Total_Score",
+                        "((SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) + " +
+                                "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) + " +
+                                "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
+                                "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
+                                "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)))/5) AS Average_Score"
+                );
+
+                // Define the JOIN clauses to include in the query
+                List<String> joinClauses = Arrays.asList(
+                        "JOIN Responses R ON S.student_id = R.student_id",
+                        "JOIN Options O ON R.option_id = O.option_id AND O.correct_answer = 1",
+                        "JOIN Questions Q ON R.questions_id = Q.questions_id",
+                        "JOIN Exam E ON Q.exam_id = E.exam_id",
+                        "JOIN Subjects sub ON E.subject_id = sub.subject_id"
+                );
+
+                // Define the GROUP BY clause
+                String groupBy = "S.student_id, S.first_name, S.last_name";
+
+                // Execute the query and get the results
+                JSONArray results = Exam.selectExam(connection, "Student S", columns, null, groupBy, null, null, joinClauses);
+
+                // Write the results to a CSV file
+                FileWriter csvWriter = new FileWriter("output.csv");
+                csvWriter.append("Student ID,First Name,Last Name,English Score,Mathematics Score,Science Score,Kiswahili Score,SSRE Score,Total Score,Average Score\n");
+
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject row = results.getJSONObject(i);
+                    csvWriter.append(row.getInt("student_id") + ",");
+                    csvWriter.append(row.getString("first_name") + ",");
+                    csvWriter.append(row.getString("last_name") + ",");
+                    csvWriter.append(row.getDouble("English_Score") + ",");
+                    csvWriter.append(row.getDouble("Mathematics_Score") + ",");
+                    csvWriter.append(row.getDouble("Science_Score") + ",");
+                    csvWriter.append(row.getDouble("Kiswahili_Score") + ",");
+                    csvWriter.append(row.getDouble("SSRE_Score") + ",");
+                    csvWriter.append(row.getDouble("Total_Score") + ",");
+                    csvWriter.append(row.getDouble("Average_Score") + "\n");
+                }
+
+                csvWriter.flush();
+                csvWriter.close();
+
+                System.out.println("CSV Report sheet file created successfully.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
 
@@ -427,7 +427,7 @@ class DatabaseConnectionApp {
 
 
 
-            // Perform database operations here
+
 
             // Close the database connection when done
             connection.close();
