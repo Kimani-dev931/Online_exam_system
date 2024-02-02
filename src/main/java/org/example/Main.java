@@ -394,7 +394,6 @@ class DatabaseConnectionApp {
 
 
                 }
-                // Define the JOIN clauses to include in the query
                 List<String> joinClauses = Arrays.asList(
                         "JOIN Responses R ON S.student_id = R.student_id",
                         "JOIN Options O ON R.option_id = O.option_id AND O.correct_answer = 1",
@@ -406,8 +405,11 @@ class DatabaseConnectionApp {
                 // Define the GROUP BY clause
                 String groupBy = "S.student_id, S.first_name, S.last_name";
 
-                // Execute the query and get the results
-                JSONArray results = Exam.selectExam(connection, "Student S", columns, null, groupBy, null, null, joinClauses);
+                // Define the ORDER BY clause to sort by Total_Score and Average_Score in descending order
+                String orderBy = "Total_Score DESC, Average_Score DESC";
+
+                // Execute the query and get the results, including the orderBy parameter
+                JSONArray results = Exam.selectExam(connection, "Student S", columns, null, groupBy, orderBy, null, joinClauses);
 
                 // Write the results to a CSV file
                 FileWriter csvWriter = new FileWriter("output.csv");
