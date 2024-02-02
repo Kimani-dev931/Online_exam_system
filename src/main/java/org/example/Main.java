@@ -325,8 +325,10 @@ class DatabaseConnectionApp {
 
             //5:Generate a report sheet of the scores for all pupils in each of the exams done and rank them from the highest average score to lowest.
             try {
+                List<String> columns = new ArrayList<>();
                 // Define the columns to select, including subject scores and overall average
-                List<String> columns = Arrays.asList(
+                if ("MySQL".equalsIgnoreCase(config.getDatabaseType())){
+                   columns = Arrays.asList(
                         "S.student_id",
                         "S.first_name",
                         "S.last_name",
@@ -345,8 +347,53 @@ class DatabaseConnectionApp {
                                 "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
                                 "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
                                 "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)))/5) AS Average_Score"
-                );
+                   );
+                } else if ("MicrosoftSQL".equalsIgnoreCase(config.getDatabaseType())) {
+                    columns = Arrays.asList(
+                        "S.student_id",
+                        "S.first_name",
+                        "S.last_name",
+                        "SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) AS English_Score",
+                        "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) AS Mathematics_Score",
+                        "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) AS Science_Score",
+                        "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) AS Kiswahili_Score",
+                        "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END) AS SSRE_Score",
+                        "(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
+                                "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
+                                "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
+                                "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
+                                "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END)) AS Total_Score",
+                        "((SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
+                                "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
+                                "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
+                                "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
+                                "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END))/5) AS Average_Score"
+                    );
 
+                }else if ("PostgreSQL".equalsIgnoreCase(config.getDatabaseType())) {
+                    columns = Arrays.asList(
+                            "S.student_id",
+                            "S.first_name",
+                            "S.last_name",
+                            "SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) AS English_Score",
+                            "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) AS Mathematics_Score",
+                            "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) AS Science_Score",
+                            "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) AS Kiswahili_Score",
+                            "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END) AS SSRE_Score",
+                            "(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
+                                    "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
+                                    "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
+                                    "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
+                                    "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END)) AS Total_Score",
+                            "((SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
+                                    "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
+                                    "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
+                                    "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
+                                    "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END))/5) AS Average_Score"
+                    );
+
+
+                }
                 // Define the JOIN clauses to include in the query
                 List<String> joinClauses = Arrays.asList(
                         "JOIN Responses R ON S.student_id = R.student_id",

@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <database-config>
-        
-    <database-type>MySQL</database-type>
-        
-    <database-name>online_exam_system</database-name>
-        
-    <database-host>172.20.94.28</database-host>
-        
-    <username ENCRYPTED="YES">oDQzGaDxF1DWF2wtDvF0Cw==</username>
-        
-    <password ENCRYPTED="YES">+ekiI832NrL4+WjLDQmYsg==</password>
+                            
     
+    
+    
+    
+    
+    <database-type>MicrosoftSQL</database-type>
+                            
+    
+    
+    
+    
+    
+    <database-name>online_exam_system</database-name>
+                            
+    
+    
+    
+    
+    
+    <database-host>172.20.94.28</database-host>
+                            
+    
+    
+    
+    
+    
+    <username ENCRYPTED="YES">vcbnMzdLRlRnsNxoY7sSww==</username>
+                            
+    
+    
+    
+    
+    
+    <password ENCRYPTED="YES">+ekiI832NrL4+WjLDQmYsg==</password>
+                        
+
+
+
+
+
 </database-config>

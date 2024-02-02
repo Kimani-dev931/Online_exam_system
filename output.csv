@@ -1,0 +1,8 @@
+Student ID,First Name,Last Name,English Score,Mathematics Score,Science Score,Kiswahili Score,SSRE Score,Total Score,Average Score
+1,John,Doe,20.0,20.0,10.0,0.0,20.0,70.0,14.0
+2,Jane,Smith,0.0,0.0,10.0,0.0,10.0,20.0,4.0
+3,Michael,Johnson,20.0,10.0,10.0,20.0,10.0,70.0,14.0
+4,Emily,Davis,0.0,10.0,0.0,0.0,10.0,20.0,4.0
+5,Daniel,Brown,20.0,10.0,10.0,20.0,10.0,70.0,14.0
+6,Olivia,Wilson,0.0,10.0,0.0,0.0,10.0,20.0,4.0
+7,William,Moore,20.0,10.0,10.0,0.0,10.0,50.0,10.0
