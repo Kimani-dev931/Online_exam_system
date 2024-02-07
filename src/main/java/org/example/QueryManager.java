@@ -1,4 +1,5 @@
 package org.example;
+
 import com.mysql.cj.xdevapi.JsonArray;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,7 +27,7 @@ public class QueryManager {
         return "INSERT INTO " + tableName + " (" + fieldNames.toString() + ") VALUES (" + placeholders.toString() + ")";
     }
 
-//    public static String constructUpdateStatement(String tableName, String idColumn, int idValue, Map<String, String> fieldValues) {
+    //    public static String constructUpdateStatement(String tableName, String idColumn, int idValue, Map<String, String> fieldValues) {
 //        StringBuilder setClause = new StringBuilder();
 //        for (String field : fieldValues.keySet()) {
 //            if (setClause.length() > 0) {
@@ -37,27 +38,27 @@ public class QueryManager {
 //
 //        return "UPDATE " + tableName + " SET " + setClause.toString() + " WHERE " + idColumn + " = " + idValue;
 //    }
-public static String constructUpdateStatement(String tableName, String idColumn, int idValue, Map<String, String> fieldValues, boolean useCurrentTimestamp) {
-    StringBuilder setClause = new StringBuilder();
-    for (String field : fieldValues.keySet()) {
-        if (setClause.length() > 0) {
-            setClause.append(", ");
+    public static String constructUpdateStatement(String tableName, String idColumn, int idValue, Map<String, String> fieldValues, boolean useCurrentTimestamp) {
+        StringBuilder setClause = new StringBuilder();
+        for (String field : fieldValues.keySet()) {
+            if (setClause.length() > 0) {
+                setClause.append(", ");
+            }
+            if (useCurrentTimestamp && "date_modified".equals(field)) {
+                setClause.append(field).append(" = CURRENT_TIMESTAMP");
+            } else {
+                setClause.append(field).append(" = ?");
+            }
         }
-        if (useCurrentTimestamp && "date_modified".equals(field)) {
-            setClause.append(field).append(" = CURRENT_TIMESTAMP");
-        } else {
-            setClause.append(field).append(" = ?");
-        }
-    }
 
-    return "UPDATE " + tableName + " SET " + setClause.toString() + " WHERE " + idColumn + " = " + idValue;
-}
+        return "UPDATE " + tableName + " SET " + setClause.toString() + " WHERE " + idColumn + " = " + idValue;
+    }
 
 
     // Core method to execute any SQL query
     public static JSONArray dynamicSelect(Connection connection, String tableName, List<String> columns,
                                           String whereClause, String groupBy, String orderBy, Integer limit,
-                                          List<String> joinClauses) throws SQLException {
+                                          List<String> joinClauses, String databaseType, Integer offset) throws SQLException {
         StringBuilder query = new StringBuilder("SELECT ");
 
         // Columns
@@ -92,9 +93,25 @@ public static String constructUpdateStatement(String tableName, String idColumn,
             query.append(" ORDER BY ").append(orderBy);
         }
 
-        // Limit
+        // Adjusting LIMIT and OFFSET based on the database type
         if (limit != null) {
-            query.append(" LIMIT ").append(limit);
+            if ("MySQL".equalsIgnoreCase(databaseType) || "PostgreSQL".equalsIgnoreCase(databaseType)) {
+                query.append(" LIMIT ").append(limit);
+                if (offset != null) {
+                    query.append(" OFFSET ").append(offset);
+                }
+            } else if ("MicrosoftSQL".equalsIgnoreCase(databaseType)) {
+                // For SQL Server, OFFSET must be used with ORDER BY, so ensure orderBy is not empty
+                if (orderBy == null || orderBy.isEmpty()) {
+                    throw new SQLException("ORDER BY clause is required for OFFSET and FETCH with SQL Server");
+                }
+                if (offset != null) {
+                    query.append(" OFFSET ").append(offset).append(" ROWS");
+                    if (limit != null) {
+                        query.append(" FETCH NEXT ").append(limit).append(" ROWS ONLY");
+                    }
+                }
+            }
         }
 
         PreparedStatement stmt = connection.prepareStatement(query.toString());
