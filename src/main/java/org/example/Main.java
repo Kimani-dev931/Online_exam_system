@@ -410,7 +410,7 @@ class DatabaseConnectionApp {
                 String orderBy = "Total_Score DESC, Average_Score DESC";
 
                 // Execute the query and get the results, including the orderBy parameter
-                JSONArray results = Exam.selectExam(connection, "Student S", columns, null, groupBy, orderBy, null,null, joinClauses,databaseType);
+                JSONArray results = Exam.selectExam(connection, "Student S", columns, null, groupBy, orderBy, null,null,null, joinClauses,databaseType);
 
                 // Write the results to a CSV file
                 FileWriter csvWriter = new FileWriter("output.csv");

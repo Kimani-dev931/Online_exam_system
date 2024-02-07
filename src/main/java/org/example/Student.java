@@ -82,9 +82,9 @@ public class Student {
 
 
     public static JSONArray selectStudent(Connection connection, String tableName, List<String> columns,
-                                          String whereClause, String groupBy, String orderBy, Integer limit,Integer offset,
+                                          String whereClause, String groupBy, String orderBy,String havingClause, Integer limit,Integer offset,
                                           List<String> joinClauses,String databaseType) throws SQLException {
-        return QueryManager.dynamicSelect(connection, tableName, columns, whereClause, groupBy, orderBy, limit, joinClauses,databaseType,offset);
+        return QueryManager.dynamicSelect(connection, tableName, columns, whereClause, groupBy, orderBy,havingClause, limit, joinClauses,databaseType,offset);
     }
 
 

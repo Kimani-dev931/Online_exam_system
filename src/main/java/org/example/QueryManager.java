@@ -57,7 +57,7 @@ public class QueryManager {
 
     // Core method to execute any SQL query
     public static JSONArray dynamicSelect(Connection connection, String tableName, List<String> columns,
-                                          String whereClause, String groupBy, String orderBy, Integer limit,
+                                          String whereClause, String groupBy, String orderBy, String havingClause, Integer limit,
                                           List<String> joinClauses, String databaseType, Integer offset) throws SQLException {
         StringBuilder query = new StringBuilder("SELECT ");
 
@@ -86,6 +86,11 @@ public class QueryManager {
         // Group by
         if (groupBy != null && !groupBy.isEmpty()) {
             query.append(" GROUP BY ").append(groupBy);
+        }
+
+        // Having clause
+        if (havingClause != null && !havingClause.isEmpty()) {
+            query.append(" HAVING ").append(havingClause);
         }
 
         // Order by
