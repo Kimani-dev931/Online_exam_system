@@ -26,9 +26,17 @@ public class Responses {
             e.printStackTrace();
         }
     }
-    public static JSONArray selectResponses(Connection connection, String tableName, List<String> columns,
-                                          String whereClause, String groupBy, String orderBy,String havingClause, Integer limit,Integer offset,
-                                          List<String> joinClauses,String databaseType) throws SQLException {
-        return QueryManager.dynamicSelect(connection, tableName, columns, whereClause, groupBy, orderBy,havingClause, limit, joinClauses,databaseType,offset);
+
+    //    public static JSONArray selectResponses(Connection connection, String tableName, List<String> columns,
+//                                          String whereClause, String groupBy, String orderBy,String havingClause, Integer limit,Integer offset,
+//                                          List<String> joinClauses,String databaseType) throws SQLException {
+//        return QueryManager.dynamicSelect(connection, tableName, columns, whereClause, groupBy, orderBy,havingClause, limit, joinClauses,databaseType,offset);
+//    }
+    public static Response selectResponses(Connection connection, String tableName, List<String> columns,
+                                         String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset,
+                                         List<String> joinClauses, String databaseType) throws SQLException {
+        JSONArray data = QueryManager.dynamicSelect(connection, tableName, columns, whereClause, groupBy, orderBy, havingClause, limit, joinClauses, databaseType, offset);
+        // Assuming the operation is always successful and returns a 200 status code
+        return new Response(200, data);
     }
 }

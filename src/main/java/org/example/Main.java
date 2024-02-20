@@ -7,6 +7,10 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathExpression;
 
+import io.undertow.Undertow;
+import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.util.Headers;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -43,9 +47,6 @@ class DatabaseConnectionApp {
 
             XPathFactory xPathfactory = XPathFactory.newInstance();
             XPath xpath = xPathfactory.newXPath();
-
-
-
 
 
             List<DatabaseConfig> configs = new ArrayList<>();
@@ -107,8 +108,6 @@ class DatabaseConnectionApp {
             transformer.transform(source, result);
 
 
-
-
             String connectionString = "";
             if ("MySQL".equalsIgnoreCase(config.getDatabaseType())) {
                 connectionString = "jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabaseName();
@@ -125,6 +124,9 @@ class DatabaseConnectionApp {
             String decryptedPassword = config.isPasswordEncrypted() ? decrypt(config.getPassword(), SECRET_KEY) : config.getPassword();
 
             connection = DriverManager.getConnection(connectionString, decryptedUsername, decryptedPassword);
+
+
+            API.startServer(connection);
 //            String tableName = "Student"; // Example table name
 //            Map<String, String> fieldValues = new HashMap<>();
 //            fieldValues.put("class_id", "2");
@@ -229,13 +231,65 @@ class DatabaseConnectionApp {
 //                        "Exam e", // Table name with alias
 //                        columns,
 //                        whereClause,
-//                        null, // groupBy
-//                        null, // orderBy
-//                        null, // limit
-//                        joinClauses
+//                        null,
+//                        null,
+//                        null,
+//                        null,
+//                        null,
+//                        joinClauses,
+//                        null
 //                );
 //
 //                System.out.println(results.toString());
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+
+//            try {
+//                // Columns to be selected
+//                List<String> columns = Arrays.asList(
+//                        "e.exam_id",
+//                        "e.class_id",
+//                        "e.subject_id",
+//                        "e.exam_date",
+//                        "e.starting_time",
+//                        "e.time_taken",
+//                        "e.exam_name",
+//                        "t.first_name",
+//                        "t.last_name"
+//                );
+//
+//                // Join clause
+//                List<String> joinClauses = Arrays.asList(
+//                        "JOIN Teacher t ON e.teacher_id = t.teacher_id"
+//                );
+//
+//                // Where clause
+//                String whereClause = "t.teacher_id = 1";
+//
+//                // Execute the specified SELECT query
+//                Response response = Student.selectStudent(
+//                        connection,
+//                        "Exam e", // Table name with alias
+//                        columns,
+//                        whereClause,
+//                        null, // groupBy
+//                        null, // orderBy
+//                        null, // havingClause
+//                        null, // limit
+//                        null, // offset
+//                        joinClauses,
+//                        null // databaseType
+//                );
+//
+//                // Check if the response was successful and extract the data
+//                if (response.getStatusCode() == 200) {
+//                    JSONArray results = (JSONArray) response.getData(); // Cast the data back to JSONArray
+//                    // Now you can work with 'results' as a JSONArray
+//                } else {
+//                    // Handle the case where the response indicates an error or no data
+//                    System.out.println("Error or no data: " + response.getMessage());
+//                }
 //            } catch (SQLException e) {
 //                e.printStackTrace();
 //            }
@@ -325,121 +379,121 @@ class DatabaseConnectionApp {
 //            }
 
             //5:Generate a report sheet of the scores for all pupils in each of the exams done and rank them from the highest average score to lowest.
-            try {
-                List<String> columns = new ArrayList<>();
-                // Define the columns to select, including subject scores and overall average
-                if ("MySQL".equalsIgnoreCase(config.getDatabaseType())){
-                   columns = Arrays.asList(
-                        "S.student_id",
-                        "S.first_name",
-                        "S.last_name",
-                        "SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) AS English_Score",
-                        "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) AS Mathematics_Score",
-                        "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) AS Science_Score",
-                        "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) AS Kiswahili_Score",
-                        "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)) AS SSRE_Score",
-                        "(SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) + " +
-                                "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) + " +
-                                "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
-                                "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
-                                "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0))) AS Total_Score",
-                        "((SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) + " +
-                                "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) + " +
-                                "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
-                                "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
-                                "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)))/5) AS Average_Score"
-                   );
-                } else if ("MicrosoftSQL".equalsIgnoreCase(config.getDatabaseType())) {
-                    columns = Arrays.asList(
-                        "S.student_id",
-                        "S.first_name",
-                        "S.last_name",
-                        "SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) AS English_Score",
-                        "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) AS Mathematics_Score",
-                        "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) AS Science_Score",
-                        "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) AS Kiswahili_Score",
-                        "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END) AS SSRE_Score",
-                        "(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
-                                "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
-                                "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
-                                "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
-                                "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END)) AS Total_Score",
-                        "((SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
-                                "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
-                                "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
-                                "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
-                                "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END))/5) AS Average_Score"
-                    );
-
-                }else if ("PostgreSQL".equalsIgnoreCase(config.getDatabaseType())) {
-                    columns = Arrays.asList(
-                            "S.student_id",
-                            "S.first_name",
-                            "S.last_name",
-                            "SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) AS English_Score",
-                            "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) AS Mathematics_Score",
-                            "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) AS Science_Score",
-                            "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) AS Kiswahili_Score",
-                            "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END) AS SSRE_Score",
-                            "(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
-                                    "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
-                                    "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
-                                    "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
-                                    "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END)) AS Total_Score",
-                            "((SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
-                                    "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
-                                    "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
-                                    "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
-                                    "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END))/5) AS Average_Score"
-                    );
-
-
-                }
-                List<String> joinClauses = Arrays.asList(
-                        "JOIN Responses R ON S.student_id = R.student_id",
-                        "JOIN Options O ON R.option_id = O.option_id AND O.correct_answer = true",
-                        "JOIN Questions Q ON R.questions_id = Q.questions_id",
-                        "JOIN Exam E ON Q.exam_id = E.exam_id",
-                        "JOIN Subjects sub ON E.subject_id = sub.subject_id"
-                );
-
-                // Define the GROUP BY clause
-                String groupBy = "S.student_id, S.first_name, S.last_name";
-
-                // Define the ORDER BY clause to sort by Total_Score and Average_Score in descending order
-                String orderBy = "Total_Score DESC, Average_Score DESC";
-
-                // Execute the query and get the results, including the orderBy parameter
-                JSONArray results = Exam.selectExam(connection, "Student S", columns, null, groupBy, orderBy, null,null,null, joinClauses,databaseType);
-
-                // Write the results to a CSV file
-                FileWriter csvWriter = new FileWriter("output.csv");
-                csvWriter.append("Student ID,First Name,Last Name,English Score,Mathematics Score,Science Score,Kiswahili Score,SSRE Score,Total Score,Average Score\n");
-
-                for (int i = 0; i < results.length(); i++) {
-                    JSONObject row = results.getJSONObject(i);
-                    System.out.println(row.toString());
-                    csvWriter.append(row.getInt("student_id") + ",");
-                    csvWriter.append(row.getString("first_name") + ",");
-                    csvWriter.append(row.getString("last_name") + ",");
-                    csvWriter.append(row.getDouble("english_score") + ",");
-                    csvWriter.append(row.getDouble("mathematics_score") + ",");
-                    csvWriter.append(row.getDouble("science_score") + ",");
-                    csvWriter.append(row.getDouble("kiswahili_score") + ",");
-                    csvWriter.append(row.getDouble("ssre_score") + ",");
-                    csvWriter.append(row.getDouble("total_score") + ",");
-                    csvWriter.append(row.getDouble("average_score") + "\n");
-                }
-
-                csvWriter.flush();
-                csvWriter.close();
-
-                System.out.println("CSV Report sheet file created successfully.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                List<String> columns = new ArrayList<>();
+//                // Define the columns to select, including subject scores and overall average
+//                if ("MySQL".equalsIgnoreCase(config.getDatabaseType())){
+//                   columns = Arrays.asList(
+//                        "S.student_id",
+//                        "S.first_name",
+//                        "S.last_name",
+//                        "SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) AS English_Score",
+//                        "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) AS Mathematics_Score",
+//                        "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) AS Science_Score",
+//                        "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) AS Kiswahili_Score",
+//                        "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)) AS SSRE_Score",
+//                        "(SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) + " +
+//                                "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) + " +
+//                                "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
+//                                "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
+//                                "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0))) AS Total_Score",
+//                        "((SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) + " +
+//                                "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) + " +
+//                                "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
+//                                "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
+//                                "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)))/5) AS Average_Score"
+//                   );
+//                } else if ("MicrosoftSQL".equalsIgnoreCase(config.getDatabaseType())) {
+//                    columns = Arrays.asList(
+//                        "S.student_id",
+//                        "S.first_name",
+//                        "S.last_name",
+//                        "SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) AS English_Score",
+//                        "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) AS Mathematics_Score",
+//                        "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) AS Science_Score",
+//                        "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) AS Kiswahili_Score",
+//                        "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END) AS SSRE_Score",
+//                        "(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
+//                                "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
+//                                "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
+//                                "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
+//                                "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END)) AS Total_Score",
+//                        "((SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
+//                                "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
+//                                "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
+//                                "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
+//                                "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END))/5) AS Average_Score"
+//                    );
+//
+//                }else if ("PostgreSQL".equalsIgnoreCase(config.getDatabaseType())) {
+//                    columns = Arrays.asList(
+//                            "S.student_id",
+//                            "S.first_name",
+//                            "S.last_name",
+//                            "SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) AS English_Score",
+//                            "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) AS Mathematics_Score",
+//                            "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) AS Science_Score",
+//                            "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) AS Kiswahili_Score",
+//                            "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END) AS SSRE_Score",
+//                            "(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
+//                                    "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
+//                                    "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
+//                                    "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
+//                                    "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END)) AS Total_Score",
+//                            "((SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
+//                                    "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
+//                                    "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
+//                                    "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
+//                                    "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END))/5) AS Average_Score"
+//                    );
+//
+//
+//                }
+//                List<String> joinClauses = Arrays.asList(
+//                        "JOIN Responses R ON S.student_id = R.student_id",
+//                        "JOIN Options O ON R.option_id = O.option_id AND O.correct_answer = true",
+//                        "JOIN Questions Q ON R.questions_id = Q.questions_id",
+//                        "JOIN Exam E ON Q.exam_id = E.exam_id",
+//                        "JOIN Subjects sub ON E.subject_id = sub.subject_id"
+//                );
+//
+//                // Define the GROUP BY clause
+//                String groupBy = "S.student_id, S.first_name, S.last_name";
+//
+//                // Define the ORDER BY clause to sort by Total_Score and Average_Score in descending order
+//                String orderBy = "Total_Score DESC, Average_Score DESC";
+//
+//                // Execute the query and get the results, including the orderBy parameter
+//                JSONArray results = Exam.selectExam(connection, "Student S", columns, null, groupBy, orderBy, null,null,null, joinClauses,databaseType);
+//
+//                // Write the results to a CSV file
+//                FileWriter csvWriter = new FileWriter("output.csv");
+//                csvWriter.append("Student ID,First Name,Last Name,English Score,Mathematics Score,Science Score,Kiswahili Score,SSRE Score,Total Score,Average Score\n");
+//
+//                for (int i = 0; i < results.length(); i++) {
+//                    JSONObject row = results.getJSONObject(i);
+//                    System.out.println(row.toString());
+//                    csvWriter.append(row.getInt("student_id") + ",");
+//                    csvWriter.append(row.getString("first_name") + ",");
+//                    csvWriter.append(row.getString("last_name") + ",");
+//                    csvWriter.append(row.getDouble("english_score") + ",");
+//                    csvWriter.append(row.getDouble("mathematics_score") + ",");
+//                    csvWriter.append(row.getDouble("science_score") + ",");
+//                    csvWriter.append(row.getDouble("kiswahili_score") + ",");
+//                    csvWriter.append(row.getDouble("ssre_score") + ",");
+//                    csvWriter.append(row.getDouble("total_score") + ",");
+//                    csvWriter.append(row.getDouble("average_score") + "\n");
+//                }
+//
+//                csvWriter.flush();
+//                csvWriter.close();
+//
+//                System.out.println("CSV Report sheet file created successfully.");
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 //            try {
 //                List<String> columns = new ArrayList<>();
 //                String totalAndAverageCalculation = "(ROUND(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) / " +
@@ -544,14 +598,12 @@ class DatabaseConnectionApp {
 //            }
 
 
-
-
-//            //update student
+            //update student
 //            String tableName = "Student";
 //            String idColumn = "student_id";
 //            int idValue = 3;
 //            Map<String, String> fieldValues = new HashMap<>();
-//            fieldValues.put("last_name", "Wambui");
+//            fieldValues.put("first_name", "Esther");
 //            fieldValues.put("date_modified", "CURRENT_TIMESTAMP");
 //            Student.updateStudent(tableName, idColumn, idValue, fieldValues, connection);
 
@@ -577,12 +629,21 @@ class DatabaseConnectionApp {
             //preparedStatement.close();
 
             // Close the database connection when done
-            connection.close();
+//            connection.close();
 
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }//finally {
+
+//            if (connection != null) {
+//                try {
+//                    connection.close();
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
 
     }
 
