@@ -26,18 +26,6 @@ public class QueryManager {
 
         return "INSERT INTO " + tableName + " (" + fieldNames.toString() + ") VALUES (" + placeholders.toString() + ")";
     }
-
-    //    public static String constructUpdateStatement(String tableName, String idColumn, int idValue, Map<String, String> fieldValues) {
-//        StringBuilder setClause = new StringBuilder();
-//        for (String field : fieldValues.keySet()) {
-//            if (setClause.length() > 0) {
-//                setClause.append(", ");
-//            }
-//            setClause.append(field).append(" = ?");
-//        }
-//
-//        return "UPDATE " + tableName + " SET " + setClause.toString() + " WHERE " + idColumn + " = " + idValue;
-//    }
     public static String constructUpdateStatement(String tableName, String idColumn, int idValue, Map<String, String> fieldValues, boolean useCurrentTimestamp) {
         StringBuilder setClause = new StringBuilder();
         for (String field : fieldValues.keySet()) {

@@ -126,73 +126,7 @@ class DatabaseConnectionApp {
             connection = DriverManager.getConnection(connectionString, decryptedUsername, decryptedPassword);
 
 
-            API.startServer(connection);
-//            String tableName = "Student"; // Example table name
-//            Map<String, String> fieldValues = new HashMap<>();
-//            fieldValues.put("class_id", "2");
-//            fieldValues.put("first_name", "Harrison");
-//            fieldValues.put("last_name", "Kimani");
-//            fieldValues.put("gender", "Male");
-//            fieldValues.put("Date_of_birth", "2003-05-29");
-//            fieldValues.put("Parent_phone_number", "0720808535");
-//            fieldValues.put(" user_name", "Pkimani@$");
-//            fieldValues.put(" password", "P845$");
-//
-//            Student.prepareAndExecuteData(tableName, fieldValues, connection);
-
-
-//            String tableName = "Teacher"; // Example table name
-//            Map<String, String> fieldValues = new HashMap<>();
-//            fieldValues.put("first_name", "Stacy");
-//            fieldValues.put("last_name", "Wanjiru");
-//            fieldValues.put("tsc_number", "A450500");
-//            fieldValues.put("id_number", "33076943");
-//            fieldValues.put("username", "Edwin");
-//            fieldValues.put("phone_number", "0750680543");
-//            fieldValues.put("education_level", "Diploma");
-//            fieldValues.put("email", "Wanjiru@gmail.com");
-//            fieldValues.put("password", "Wanjiru$267*");
-//
-//            Teacher.executeteacher(tableName, fieldValues, connection);
-
-//              String tableName = "Subjects"; // Example table name
-//              Map<String, String> fieldValues = new HashMap<>();
-//              fieldValues.put("subject_text", "Social studies and Religious Education");
-//              Subject.insertsubject(tableName, fieldValues, connection);
-
-//              String tableName = "Exam"; // Example table name
-//              Map<String, String> fieldValues = new HashMap<>();
-//              fieldValues.put("class_id", "2");
-//              fieldValues.put("subject_id", "1");
-//              fieldValues.put("teacher_id", "1");
-//              fieldValues.put("starting_time", "10:30:00");
-//              fieldValues.put("time_taken", "90");
-//              fieldValues.put("exam_name", "Jesma");
-//              fieldValues.put("exam_date ", "2024-01-28");
-//              Exam.InsertExam(tableName, fieldValues, connection);
-
-//
-//            String tableName = "Questions";
-//            Map<String, String> fieldValues = new HashMap<>();
-//            fieldValues.put("exam_id", "5");
-//            fieldValues.put("question_text ", "1: In the Bible, who came as the savior of the world?");
-//            fieldValues.put(" question_marks", "10");
-//            Questions.Insertquestions(tableName, fieldValues, connection);
-
-//            String tableName = "Options";
-//            Map<String, String> fieldValues = new HashMap<>();
-//            fieldValues.put("question_id", "17");
-//            fieldValues.put("option_label", "D");
-//            fieldValues.put("option_value", "David");
-//            fieldValues.put("correct_answer", "0");
-//            Options.Insertoptions(tableName, fieldValues, connection);
-
-//            String tableName = "Responses";
-//            Map<String, String> fieldValues = new HashMap<>();
-//            fieldValues.put("student_id", "11");
-//            fieldValues.put("questions_id", "17");
-//            fieldValues.put("option_id", "73");
-//            Responses.Insertresponses(tableName, fieldValues, connection);
+            API.startServer(connection,config);
 
             // This will execute 'SELECT * FROM Student
 //            try {
