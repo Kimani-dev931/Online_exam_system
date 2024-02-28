@@ -2,10 +2,7 @@ package org.example;
 
 import org.json.JSONArray;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +11,8 @@ public class Exam {
 
     public static Response insertexam(String tableName, Map<String, String> fieldValues, Connection connection) {
         try {
+
+
             String insertSQL = QueryManager.constructInsertStatement(tableName, fieldValues);
             PreparedStatement preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
             int paramIndex = 1;
@@ -28,9 +27,12 @@ public class Exam {
 
             // Assuming the data inserted is the data you want to return
             return new Response(201, fieldValues); // 201 Created
+
         } catch (SQLException e) {
             e.printStackTrace();
             return null; // Or handle error appropriately
+        }finally {
+
         }
     }
 

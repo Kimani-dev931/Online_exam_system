@@ -23,7 +23,7 @@ public class Student {
 
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Creating user failed, no rows affected.");
+                throw new SQLException("Creating student failed, no rows affected.");
             }
 
             // Assuming the data inserted is the data you want to return
@@ -61,12 +61,6 @@ public class Student {
         }
     }
 
-
-    //    public static JSONArray selectStudent(Connection connection, String tableName, List<String> columns,
-//                                          String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset,
-//                                          List<String> joinClauses, String databaseType) throws SQLException {
-//        return QueryManager.dynamicSelect(connection, tableName, columns, whereClause, groupBy, orderBy, havingClause, limit, joinClauses, databaseType, offset);
-//    }
     public static Response selectStudent(Connection connection, String tableName, List<String> columns,
                                          String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset,
                                          List<String> joinClauses, String databaseType) throws SQLException {

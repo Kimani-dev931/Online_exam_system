@@ -5,16 +5,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-import javax.xml.xpath.XPathExpression;
 
-import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.example.rest.RestAPIServer;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -22,19 +16,13 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.security.Key;
 import java.util.*;
 import java.sql.*;
-
-class DatabaseConnectionApp {
-    private static Connection connection = null;
+public class DatabaseConnectionApp {
+    public static Connection connection = null;
     private static final String SECRET_KEY = "beadc627d00ec777340bf6f06ece360fe1762e8b4408504516afd194dc303c77";
 
     public static void main(String[] args) {
@@ -76,7 +64,7 @@ class DatabaseConnectionApp {
             config.setPasswordEncrypted("YES".equals(passwordEncrypted));
 
 
-            // Add the DatabaseConfig object to the list
+
             configs.add(config);
 
 
@@ -126,7 +114,8 @@ class DatabaseConnectionApp {
             connection = DriverManager.getConnection(connectionString, decryptedUsername, decryptedPassword);
 
 
-            API.startServer(connection,config);
+//            API.startServer(connection,config);
+            RestAPIServer.start();
 
             // This will execute 'SELECT * FROM Student
 //            try {

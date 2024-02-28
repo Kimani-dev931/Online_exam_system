@@ -14,6 +14,15 @@ public class DatabaseConfig {
     private String databaseHost;
     private String username;
     private String password;
+
+
+//    private int iothreads;
+//    private int workerthreads;
+//
+//    private int undertowserverport;
+//    private String undertowserverhost;
+//
+
     private boolean isUsernameEncrypted;
     private boolean isPasswordEncrypted;
 
@@ -40,6 +49,39 @@ public class DatabaseConfig {
     public void setDatabaseHost(String databaseHost) {
         this.databaseHost = databaseHost;
     }
+
+
+//    public int getiothreads() {
+//        return iothreads;
+//    }
+//
+//    public void setiothreads(int iothreads) {
+//        this.iothreads = iothreads;
+//    }
+//
+//
+//    public int getworkerthreads() {
+//        return workerthreads;
+//    }
+//
+//    public void setworkerthreads(int workerthreads) {
+//        this.workerthreads = workerthreads;
+//    }
+//
+//    public int getundertowserverport() {
+//        return undertowserverport;
+//    }
+//
+//    public void setundertowserverport(int undertowserverport) {
+//        this.undertowserverport = undertowserverport;
+//    }
+//
+//    public String getundertowserverhost() {return undertowserverhost; }
+//
+//    public void setundertowserverhost(String  undertowserverhost) {
+//        this.undertowserverhost =  undertowserverhost;
+//    }
+
 
     public String getUsername() {
         return username;
