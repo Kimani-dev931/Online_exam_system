@@ -1,5 +1,6 @@
-package org.example;
+package org.example.controllers;
 
+import org.example.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -8,10 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 
 public class Reports {
     // 2 :Display all exams set by a teacher:
@@ -44,6 +43,7 @@ public class Reports {
                     null,
                     null,
                     joinClauses,
+                    null,
                     null
             );
 
@@ -73,7 +73,7 @@ public class Reports {
 
             String whereClause = "s.student_id = " + studentId + " AND q.exam_id = " + examId;
 
-            Response response =  Exam.selectExam(connection, "Responses r", columns, whereClause, null, null, null, null, null, joinClauses, null);
+            Response response =  Exam.selectExam(connection, "Responses r", columns, whereClause, null, null, null, null, null, joinClauses, null,null);
 
             if (response.getStatusCode() == 200) {
                 if (response.getData() instanceof JSONArray) {
@@ -136,7 +136,7 @@ public class Reports {
 
             // Fetching total scores for each student
             Response studentScoresResponse = Exam.selectExam(connection, "Responses r", columns,
-                    whereClause, groupBy, "total_score DESC", null, 5, null, joinClauses, null);
+                    whereClause, groupBy, "total_score DESC", null, 5, null, joinClauses, null,null);
 
             if (studentScoresResponse.getStatusCode() != 200) {
                 // If the query was not successful, return the response directly
@@ -209,7 +209,7 @@ public class Reports {
             String groupBy = "S.student_id, S.first_name, S.last_name";
             String orderBy = "Total_Score DESC, Average_Score DESC";
 
-            Response examResponse = Exam.selectExam(connection, "Student S", columns, null, groupBy, orderBy, null, null, null, joinClauses, null);
+            Response examResponse = Exam.selectExam(connection, "Student S", columns, null, groupBy, orderBy, null, null, null, joinClauses, null,null);
 
             if (examResponse.getStatusCode() != 200) {
                 return examResponse; // Early return in case of error

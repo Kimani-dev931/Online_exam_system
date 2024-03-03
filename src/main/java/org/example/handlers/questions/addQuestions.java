@@ -7,7 +7,7 @@ import io.undertow.server.handlers.form.FormDataParser;
 import io.undertow.server.handlers.form.FormParserFactory;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
-import org.example.Questions;
+import org.example.controllers.Questions;
 import org.example.Response;
 import org.json.JSONObject;
 

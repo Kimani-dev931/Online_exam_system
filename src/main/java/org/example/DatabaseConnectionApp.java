@@ -23,6 +23,8 @@ import java.util.*;
 import java.sql.*;
 public class DatabaseConnectionApp {
     public static Connection connection = null;
+
+    public static DatabaseConfig config = new DatabaseConfig();
     private static final String SECRET_KEY = "beadc627d00ec777340bf6f06ece360fe1762e8b4408504516afd194dc303c77";
 
     public static void main(String[] args) {
@@ -40,7 +42,7 @@ public class DatabaseConnectionApp {
             List<DatabaseConfig> configs = new ArrayList<>();
 
 
-            DatabaseConfig config = new DatabaseConfig();
+//            DatabaseConfig config = new DatabaseConfig();
 
             String databaseType = (String) xpath.compile("/database-config/database-type").evaluate(doc, XPathConstants.STRING);
             config.setDatabaseType(databaseType);
@@ -62,6 +64,19 @@ public class DatabaseConnectionApp {
 
             String passwordEncrypted = (String) xpath.compile("/database-config/password/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
             config.setPasswordEncrypted("YES".equals(passwordEncrypted));
+
+            String iothreads = (String) xpath.compile("/database-config/io-threads").evaluate(doc, XPathConstants.STRING);
+            config.setiothreads(iothreads);
+
+
+            String workerthreads = (String) xpath.compile("/database-config/worker-threads").evaluate(doc, XPathConstants.STRING);
+            config.setworkerthreads(workerthreads);
+
+            String undertowserverport = (String) xpath.compile("/database-config/undertow-server-port").evaluate(doc, XPathConstants.STRING);
+            config.setundertowserverport(undertowserverport);
+
+            String undertowserverhost = (String) xpath.compile("/database-config/undertow-server-host").evaluate(doc, XPathConstants.STRING);
+            config.setundertowserverhost(undertowserverhost);
 
 
 
@@ -90,7 +105,7 @@ public class DatabaseConnectionApp {
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.INDENT, "no");
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(new File("config.xml"));
             transformer.transform(source, result);
@@ -114,7 +129,7 @@ public class DatabaseConnectionApp {
             connection = DriverManager.getConnection(connectionString, decryptedUsername, decryptedPassword);
 
 
-//            API.startServer(connection,config);
+
             RestAPIServer.start();
 
             // This will execute 'SELECT * FROM Student

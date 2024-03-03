@@ -4,28 +4,17 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.form.FormDataParser;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
-import org.example.Exam;
+import org.example.controllers.Exam;
 import org.example.Response;
 import org.json.JSONObject;
 
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import static org.example.DatabaseConnectionApp.connection;
 
 
-
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import org.json.JSONObject;
 import io.undertow.server.handlers.form.FormData;
-import io.undertow.server.handlers.form.FormDataParser;
 import io.undertow.server.handlers.form.FormParserFactory;
-
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
 
 public class addExam implements HttpHandler {
 

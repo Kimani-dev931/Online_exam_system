@@ -5,7 +5,7 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import org.example.Response;
-import org.example.Subject;
+import org.example.controllers.Subject;
 
 import static org.example.DatabaseConnectionApp.connection;
 
@@ -16,7 +16,7 @@ public class findSubjectsById implements HttpHandler {
         String whereClause = "subject_id = " + idValue;
         exchange.getRequestReceiver().receiveFullString((exchange1, message) -> {
             try {
-                Response response = Subject.selectSubjects(connection, "Subjects", null, whereClause, null, null, null, null, null, null, null);
+                Response response = Subject.selectSubjects(connection, "Subjects", null, whereClause, null, null, null, null, null, null, null,null);
 
                 // Assuming response.getData() returns a JSON string representation of an array
                 String responseData = response.getData().toString();

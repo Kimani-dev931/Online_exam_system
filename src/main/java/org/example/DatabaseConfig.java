@@ -16,12 +16,12 @@ public class DatabaseConfig {
     private String password;
 
 
-//    private int iothreads;
-//    private int workerthreads;
-//
-//    private int undertowserverport;
-//    private String undertowserverhost;
-//
+    private String iothreads;
+    private String workerthreads;
+
+    private String undertowserverport;
+
+    private String undertowserverhost;
 
     private boolean isUsernameEncrypted;
     private boolean isPasswordEncrypted;
@@ -51,36 +51,6 @@ public class DatabaseConfig {
     }
 
 
-//    public int getiothreads() {
-//        return iothreads;
-//    }
-//
-//    public void setiothreads(int iothreads) {
-//        this.iothreads = iothreads;
-//    }
-//
-//
-//    public int getworkerthreads() {
-//        return workerthreads;
-//    }
-//
-//    public void setworkerthreads(int workerthreads) {
-//        this.workerthreads = workerthreads;
-//    }
-//
-//    public int getundertowserverport() {
-//        return undertowserverport;
-//    }
-//
-//    public void setundertowserverport(int undertowserverport) {
-//        this.undertowserverport = undertowserverport;
-//    }
-//
-//    public String getundertowserverhost() {return undertowserverhost; }
-//
-//    public void setundertowserverhost(String  undertowserverhost) {
-//        this.undertowserverhost =  undertowserverhost;
-//    }
 
 
     public String getUsername() {
@@ -97,6 +67,23 @@ public class DatabaseConfig {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getiothreads() {return iothreads;}
+
+    public void setiothreads(String iothreads) {this.iothreads = iothreads;}
+
+
+    public String getworkerthreads() {return workerthreads;}
+
+    public void setworkerthreads(String workerthreads) {this.workerthreads = workerthreads;}
+    public String getundertowserverport() {return undertowserverport;}
+    public void setundertowserverport(String undertowserverport) {this.undertowserverport = undertowserverport;}
+
+    public String getundertowserverhost() {return undertowserverhost; }
+
+    public void setundertowserverhost(String  undertowserverhost) {
+        this.undertowserverhost =  undertowserverhost;
     }
 
     public boolean isUsernameEncrypted() {
@@ -139,6 +126,7 @@ public class DatabaseConfig {
                 databaseHostNode.setTextContent(this.databaseHost);
             }
 
+
             // Update username
             Node usernameNode = (Node) xpath.compile("/database-config/username").evaluate(doc, XPathConstants.NODE);
             if (usernameNode != null) {
@@ -152,6 +140,30 @@ public class DatabaseConfig {
                 passwordNode.setTextContent(this.password);
                 passwordNode.getAttributes().getNamedItem("ENCRYPTED").setTextContent(this.isPasswordEncrypted ? "YES" : "NO");
             }
+            // Update database-host
+            Node iothreadsNode = (Node) xpath.compile("/database-config/io-threads").evaluate(doc, XPathConstants.NODE);
+            if (iothreadsNode != null) {
+                iothreadsNode.setTextContent(iothreads);
+            }
+            // Update database-host
+            Node workerthreadsNode = (Node) xpath.compile("/database-config/worker-threads").evaluate(doc, XPathConstants.NODE);
+            if (workerthreadsNode != null) {
+                workerthreadsNode.setTextContent(workerthreads);
+
+            }
+            // Update database-host
+            Node undertowserverportNode = (Node) xpath.compile("/database-config/undertow-server-port").evaluate(doc, XPathConstants.NODE);
+            if (undertowserverportNode != null) {
+                undertowserverportNode.setTextContent(undertowserverport);
+
+            }
+            // Update database-host
+            Node undertowserverhostNode = (Node) xpath.compile("/database-config/undertow-server-host").evaluate(doc, XPathConstants.NODE);
+            if (undertowserverhostNode!= null) {
+                undertowserverhostNode.setTextContent(this.undertowserverhost);
+            }
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

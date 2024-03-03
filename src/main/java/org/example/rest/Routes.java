@@ -54,6 +54,7 @@ public class Routes {
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
+
     public static RoutingHandler reports() {
         return Handlers.routing()
                 .get("/exams-set-teacher/{teacherId}", new Dispatcher(new exam_set_by_teacher()))
@@ -64,6 +65,7 @@ public class Routes {
                 .setFallbackHandler(new Dispatcher(new FallBack()));
 
     }
+
     public static RoutingHandler classes() {
         return Handlers.routing()
                 .post("", new Dispatcher(new BlockingHandler(new addClass())))
@@ -73,6 +75,7 @@ public class Routes {
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
+
     public static RoutingHandler options() {
         return Handlers.routing()
                 .post("", new Dispatcher(new BlockingHandler(new addOptions())))
@@ -82,6 +85,7 @@ public class Routes {
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
+
     public static RoutingHandler questions() {
         return Handlers.routing()
                 .post("", new Dispatcher(new BlockingHandler(new addQuestions())))
@@ -91,6 +95,7 @@ public class Routes {
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
+
     public static RoutingHandler responses() {
         return Handlers.routing()
                 .post("", new Dispatcher(new BlockingHandler(new addResponses())))
@@ -100,6 +105,7 @@ public class Routes {
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
+
     public static RoutingHandler student() {
         return Handlers.routing()
                 .post("", new Dispatcher(new BlockingHandler(new addStudent())))
@@ -109,6 +115,7 @@ public class Routes {
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
+
     public static RoutingHandler subjects() {
         return Handlers.routing()
                 .post("", new Dispatcher(new BlockingHandler(new addSubjects())))
@@ -118,6 +125,7 @@ public class Routes {
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
+
     public static RoutingHandler teacher() {
         return Handlers.routing()
                 .post("", new Dispatcher(new BlockingHandler(new addTeachers())))

@@ -4,7 +4,7 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
-import org.example.Reports;
+import org.example.controllers.Reports;
 import org.example.Response;
 
 import static org.example.DatabaseConnectionApp.connection;

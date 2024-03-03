@@ -4,7 +4,7 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
-import org.example.Class;
+import org.example.controllers.Class;
 import org.example.Response;
 import org.json.JSONObject;
 

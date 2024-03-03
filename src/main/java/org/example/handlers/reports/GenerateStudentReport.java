@@ -2,16 +2,10 @@ package org.example.handlers.reports;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
-import io.undertow.util.StatusCodes;
-import org.example.Reports;
-import org.example.Response;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.nio.file.Files;
 
-import static org.example.DatabaseConnectionApp.connection;
 public class GenerateStudentReport implements HttpHandler{
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {

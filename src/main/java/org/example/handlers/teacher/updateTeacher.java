@@ -5,7 +5,7 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import org.example.Response;
-import org.example.Teacher;
+import org.example.controllers.Teacher;
 import org.json.JSONObject;
 
 import java.util.HashMap;

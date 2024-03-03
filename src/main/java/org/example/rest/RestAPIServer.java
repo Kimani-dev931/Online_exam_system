@@ -5,18 +5,21 @@ import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
 import io.undertow.server.handlers.PathHandler;
 import org.example.DatabaseConfig;
+import org.example.DatabaseConnectionApp;
 import org.example.rest.base.CORSHandler;
 import org.example.rest.base.FallBack;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 
+import static org.example.DatabaseConnectionApp.config;
+
 public class RestAPIServer {
     public static void start() {
         try {
 
             String BASE_REST_API_URL = "/api/rest";
-//            String BASE_action_API_URL = "/add-exam";
+//
 
             PathHandler pathHandler = Handlers.path()
                     .addPrefixPath(BASE_REST_API_URL+"/reports", Routes.reports())
@@ -30,23 +33,23 @@ public class RestAPIServer {
                     .addPrefixPath(BASE_REST_API_URL+"/teachers", Routes.teacher())
 
                     .addPrefixPath("/", new FallBack())
-                    //.addPrefixPath("/*", Routes.portal())
                     ;
 
             Undertow server = Undertow.builder()
                     .setServerOption(UndertowOptions.DECODE_URL, true)
                     .setServerOption(UndertowOptions.URL_CHARSET, StandardCharsets.UTF_8.name())
-                    .setIoThreads(5)
-                    .setWorkerThreads(10)
-                    .addHttpListener(4100,"0.0.0.0")
+                    .setIoThreads(Integer.parseInt(config.getiothreads()))
+                    .setWorkerThreads(Integer.parseInt(config.getiothreads()))
+                    .addHttpListener(Integer.parseInt(config.getundertowserverport()),config.getundertowserverhost())
                     .setHandler(new CORSHandler(pathHandler))
                     .build();
 
             server.start();
 
-            System.out.println(" Rest API Server started at: 0.0.0.0:4100");
+            System.out.println(" Rest API Server started at: " +config.getundertowserverhost()+ ":" + config.getundertowserverport());
             System.out.println();
         }
+
         catch (Exception e) {
             System.err.println("Error starting RestAPIServer: (" + e.getMessage() + ")");
             e.printStackTrace();

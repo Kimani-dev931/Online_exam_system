@@ -19,7 +19,7 @@ public class Response {
     }
 
     // Constructor for responses with JSONArray data
-    public Response(int statusCode, JSONArray data) {
+    public Response(int statusCode, Object data) {
         this.statusCode = statusCode;
         this.data = (data != null) ? data : new JSONArray(); // Ensure data is never null
         this.message = ""; // Default message to empty if not provided
