@@ -7,7 +7,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-public class DatabaseConfig {
+public class databaseConfig {
 
     private String databaseType;
     private String databaseName;

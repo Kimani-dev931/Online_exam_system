@@ -4,15 +4,12 @@ import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
 import io.undertow.server.handlers.PathHandler;
-import org.example.DatabaseConfig;
-import org.example.DatabaseConnectionApp;
 import org.example.rest.base.CORSHandler;
 import org.example.rest.base.FallBack;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 
-import static org.example.DatabaseConnectionApp.config;
+import static org.example.MainApp.config;
 
 public class RestAPIServer {
     public static void start() {

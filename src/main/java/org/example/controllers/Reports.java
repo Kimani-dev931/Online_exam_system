@@ -15,103 +15,92 @@ import java.util.List;
 public class Reports {
     // 2 :Display all exams set by a teacher:
     public static Response exams_set_by_a_Teacher(Connection connection, int teacherId) {
-        try {
-            List<String> columns = Arrays.asList(
-                    "e.exam_id",
-                    "e.class_id",
-                    "e.subject_id",
-                    "e.exam_date",
-                    "e.starting_time",
-                    "e.time_taken",
-                    "e.exam_name",
-                    "t.first_name",
-                    "t.last_name"
-            );
+        List<String> columns = Arrays.asList(
+                "e.exam_id",
+                "e.class_id",
+                "e.subject_id",
+                "e.exam_date",
+                "e.starting_time",
+                "e.time_taken",
+                "e.exam_name",
+                "t.first_name",
+                "t.last_name"
+        );
 
-            List<String> joinClauses = Arrays.asList("JOIN Teacher t ON e.teacher_id = t.teacher_id", "JOIN Subjects sub ON e.subject_id = sub.subject_id");
-            String whereClause = "t.teacher_id = " + teacherId;
-
-
-            Response response = Student.selectStudent(
-                    connection,
-                    "Exam e",
-                    columns,
-                    whereClause,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    joinClauses,
-                    null,
-                    null
-            );
+        List<String> joinClauses = Arrays.asList("JOIN Teacher t ON e.teacher_id = t.teacher_id", "JOIN Subjects sub ON e.subject_id = sub.subject_id");
+        String whereClause = "t.teacher_id = " + teacherId;
 
 
-            return response;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Response response = Student.selectStudent(
 
-            return new Response(500, "Error fetching exams: " + e.getMessage());
-        }
+                "Exam e",
+                columns,
+                whereClause,
+                null,
+                null,
+                null,
+                null,
+                null,
+                joinClauses,
+                null,
+                null
+        );
+
+
+        return response;
     }
 
 
     //3:Generate a report on the answers provided by a pupil for an exam and their percentage score
-    public static Response fetchExamResultsForStudent(Connection connection, int studentId, int examId) {
-        try {
-            List<String> columns = Arrays.asList(
-                    "s.student_id", "s.first_name", "s.last_name",
-                    "q.exam_id", "q.question_text", "o.option_value", "o.correct_answer", "q.question_marks"
-            );
+    public static Response fetchExamResultsForStudent( int studentId, int examId) {
+        List<String> columns = Arrays.asList(
+                "s.student_id", "s.first_name", "s.last_name",
+                "q.exam_id", "q.question_text", "o.option_value", "o.correct_answer", "q.question_marks"
+        );
 
-            List<String> joinClauses = Arrays.asList(
-                    "JOIN Questions q ON r.questions_id = q.questions_id",
-                    "JOIN Options o ON r.option_id = o.option_id",
-                    "JOIN Student s ON r.student_id = s.student_id"
-            );
+        List<String> joinClauses = Arrays.asList(
+                "JOIN Questions q ON r.questions_id = q.questions_id",
+                "JOIN Options o ON r.option_id = o.option_id",
+                "JOIN Student s ON r.student_id = s.student_id"
+        );
 
-            String whereClause = "s.student_id = " + studentId + " AND q.exam_id = " + examId;
+        String whereClause = "s.student_id = " + studentId + " AND q.exam_id = " + examId;
 
-            Response response =  Exam.selectExam(connection, "Responses r", columns, whereClause, null, null, null, null, null, joinClauses, null,null);
+        Response response =  Exam.selectExam( "Responses r", columns, whereClause, null, null, null, null, null, joinClauses, null,null);
 
-            if (response.getStatusCode() == 200) {
-                if (response.getData() instanceof JSONArray) {
-                    JSONArray results = (JSONArray) response.getData();
-                    JSONArray processedResults = new JSONArray();
-                    double totalPossibleMarks = 0;
-                    double totalPossiblescore = 0;
-                    double percentageScore;
-
-
-                    for (int i = 0; i < results.length(); i++) {
-                        JSONObject row = results.getJSONObject(i);
-                        boolean correctAnswer = row.getBoolean("correct_answer");
-                        int questionMarks = row.getInt("question_marks");
-                        double questionscore = correctAnswer ? questionMarks : 0;
-                         totalPossibleMarks += questionMarks;
-                         totalPossiblescore += questionscore;
-                         percentageScore = totalPossiblescore / totalPossibleMarks *100;
-                        row.put("percentage_score", percentageScore);
-                        processedResults.put(row);
-
-                        // Assuming you want to calculate the percentage of correct answers
-                        // Here, we're just marking each question as fully correct or not
-
-                    }
+        if (response.getStatusCode() == 200) {
+            if (response.getData() instanceof JSONArray) {
+                JSONArray results = (JSONArray) response.getData();
+                JSONArray processedResults = new JSONArray();
+                double totalPossibleMarks = 0;
+                double totalPossiblescore = 0;
+                double percentageScore;
 
 
-                    // Assuming Response constructor can handle JSONArray directly
-                    return new Response(200, processedResults);
-                } else {
-                    return new Response(500, "Unexpected data type received");
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject row = results.getJSONObject(i);
+                    boolean correctAnswer = row.getBoolean("correct_answer");
+                    int questionMarks = row.getInt("question_marks");
+                    double questionscore = correctAnswer ? questionMarks : 0;
+                     totalPossibleMarks += questionMarks;
+                     totalPossiblescore += questionscore;
+                     percentageScore = totalPossiblescore / totalPossibleMarks *100;
+                    row.put("percentage_score", percentageScore);
+                    processedResults.put(row);
+
+                    // Assuming you want to calculate the percentage of correct answers
+                    // Here, we're just marking each question as fully correct or not
+
                 }
+
+
+                // Assuming Response constructor can handle JSONArray directly
+                return new Response(200, processedResults);
             } else {
-                return response;
+                return new Response(500, "Unexpected data type received");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return new Response(500, "Error processing exam results: " + e.getMessage());
+        } else {
+            return response;
         }
     }
 
@@ -135,7 +124,7 @@ public class Reports {
             String groupBy = "s.student_id";
 
             // Fetching total scores for each student
-            Response studentScoresResponse = Exam.selectExam(connection, "Responses r", columns,
+            Response studentScoresResponse = Exam.selectExam( "Responses r", columns,
                     whereClause, groupBy, "total_score DESC", null, 5, null, joinClauses, null,null);
 
             if (studentScoresResponse.getStatusCode() != 200) {
@@ -209,7 +198,7 @@ public class Reports {
             String groupBy = "S.student_id, S.first_name, S.last_name";
             String orderBy = "Total_Score DESC, Average_Score DESC";
 
-            Response examResponse = Exam.selectExam(connection, "Student S", columns, null, groupBy, orderBy, null, null, null, joinClauses, null,null);
+            Response examResponse = Exam.selectExam( "Student S", columns, null, groupBy, orderBy, null, null, null, joinClauses, null,null);
 
             if (examResponse.getStatusCode() != 200) {
                 return examResponse; // Early return in case of error
@@ -250,9 +239,6 @@ public class Reports {
             // Return a response with the CSV file path
             return new Response(200, csvFilePath);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return new Response(500, "SQL Error: " + e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
             return new Response(500, "IO Error: " + e.getMessage());

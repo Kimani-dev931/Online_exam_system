@@ -8,14 +8,14 @@ import java.util.Map;
 
 public class Response {
     private int statusCode;
-    private Object data; // Use Object to support both Map and JSONArray
+    private Object data;
     private String message;
 
     // Constructor for responses with Map data
     public Response(int statusCode, Map<String, String> data) {
         this.statusCode = statusCode;
         this.data = (data != null) ? data : new HashMap<>(); // Ensure data is never null
-        this.message = ""; // Default message to empty if not provided
+        this.message = "";
     }
 
     // Constructor for responses with JSONArray data
@@ -34,7 +34,7 @@ public class Response {
 
     // Additional constructor to handle null data explicitly
     public Response(int statusCode) {
-        this(statusCode, (String) null); // Delegate to the constructor that accepts a message
+        this(statusCode, (String) null);
     }
 
     // Getters and potentially setters
@@ -59,7 +59,7 @@ public class Response {
         return response;
     }
 
-    // Optionally, a toString method for debugging
+    // toString method for debugging
     @Override
     public String toString() {
         return "Response{" +

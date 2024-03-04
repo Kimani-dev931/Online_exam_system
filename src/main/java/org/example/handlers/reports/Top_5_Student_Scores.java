@@ -7,7 +7,7 @@ import io.undertow.util.StatusCodes;
 import org.example.controllers.Reports;
 import org.example.Response;
 
-import static org.example.DatabaseConnectionApp.connection;
+import static org.example.MainApp.connection;
 
 public class Top_5_Student_Scores implements HttpHandler {
     @Override

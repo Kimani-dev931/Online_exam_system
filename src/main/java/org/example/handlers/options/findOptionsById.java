@@ -7,8 +7,6 @@ import io.undertow.util.StatusCodes;
 import org.example.controllers.Options;
 import org.example.Response;
 
-import static org.example.DatabaseConnectionApp.connection;
-
 public class findOptionsById implements HttpHandler {
     @Override
     public void handleRequest(HttpServerExchange exchange) {
@@ -16,7 +14,7 @@ public class findOptionsById implements HttpHandler {
         String whereClause = "option_id = " + idValue;
         exchange.getRequestReceiver().receiveFullString((exchange1, message) -> {
             try {
-                Response response = Options.selectOptions(connection, "Options", null, whereClause, null, null, null, null, null, null, null,null);
+                Response response = Options.selectOptions( "Options", null, whereClause, null, null, null, null, null, null, null,null);
 
                 // Assuming response.getData() returns a JSON string representation of an array
                 String responseData = response.getData().toString();

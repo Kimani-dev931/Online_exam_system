@@ -15,8 +15,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.example.DatabaseConnectionApp.connection;
-
 public class addClass implements HttpHandler {
 
     @Override
@@ -67,7 +65,7 @@ public class addClass implements HttpHandler {
 
     private void performDatabaseOperation(HttpServerExchange exchange, Map<String, String> fieldValues) {
         try {
-            Response response = Class.insertclass("Class", fieldValues, connection);
+            Response response = Class.insertclass("Class", fieldValues);
 
             // Check if the response is null
             if (response == null) {

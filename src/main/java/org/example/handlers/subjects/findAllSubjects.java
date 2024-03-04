@@ -5,12 +5,9 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import org.example.Response;
-import org.example.controllers.Student;
 import org.example.controllers.Subject;
 
 import java.util.*;
-
-import static org.example.DatabaseConnectionApp.connection;
 
 public class findAllSubjects implements HttpHandler {
 //    @Override
@@ -44,11 +41,11 @@ public class findAllSubjects implements HttpHandler {
             Map<String, String> paramToColumnMap = Map.of(
                     "subjectTextStartsWith", "subject_text",
                     "dateCreatedStartsWith", "date_created"
-                    // Corrected key format for consistency
+
             );
 
             Map<String, String> likeConditions = new HashMap<>();
-            StringBuilder userInputs = new StringBuilder(); // To accumulate user inputs for error messaging
+            StringBuilder userInputs = new StringBuilder();
 
             // Automatically construct likeConditions based on the mapping
             exchange.getQueryParameters().forEach((paramName, value) -> {
@@ -72,7 +69,7 @@ public class findAllSubjects implements HttpHandler {
             exchange.getRequestReceiver().receiveFullString((exchange1, message) -> {
                 try {
                     // Fetch data and handle empty result set
-                    Response response = Student.selectStudent(connection, "Subjects", columns, null, null, orderBy, null, pageSize, offset, null, null, likeConditions);
+                    Response response = Subject.selectSubjects("Subjects", columns, null, null, orderBy, null, pageSize, offset, null, null, likeConditions);
                     if ("[]".equals(response.getData().toString().trim())) {
                         sendResponse(exchange1, StatusCodes.NOT_FOUND, "{\"error\":\"Query-parameter values not found or no matching data: " + userInputs.toString() + "\"}");
                     } else {

@@ -11,8 +11,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.example.DatabaseConnectionApp.connection;
-
 public class updateQuestions implements HttpHandler {
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
@@ -22,7 +20,7 @@ public class updateQuestions implements HttpHandler {
             try {
                 JSONObject json = new JSONObject(message);
                 Map<String, String> fieldValues = jsonToMap(json);
-                Response response = Questions.updateQuestions("Questions", "questions_id", Integer.parseInt(idValue), fieldValues, connection);
+                Response response = Questions.updateQuestions("Questions", "questions_id", Integer.parseInt(idValue), fieldValues);
                 sendResponse(exchange, response.getStatusCode(), response.getData().toString()); // Assuming response.getData() returns a String or can be converted to String
             } catch (NumberFormatException e) {
                 sendResponse(exchange, StatusCodes.BAD_REQUEST, "{\"error\":\"Invalid Question ID format\"}");

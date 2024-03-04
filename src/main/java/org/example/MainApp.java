@@ -21,12 +21,25 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.util.*;
 import java.sql.*;
-public class DatabaseConnectionApp {
+public class MainApp {
     public static Connection connection = null;
+    private static String connectionString;
+    private static String decryptedUsername;
+    private static String decryptedPassword;
 
-    public static DatabaseConfig config = new DatabaseConfig();
+    public static databaseConfig config = new databaseConfig();
     private static final String SECRET_KEY = "beadc627d00ec777340bf6f06ece360fe1762e8b4408504516afd194dc303c77";
+    public static String getConnectionString() {
+        return connectionString;
+    }
 
+    public static String getDecryptedUsername() {
+        return decryptedUsername;
+    }
+
+    public static String getDecryptedPassword() {
+        return decryptedPassword;
+    }
     public static void main(String[] args) {
 
 
@@ -39,7 +52,7 @@ public class DatabaseConnectionApp {
             XPath xpath = xPathfactory.newXPath();
 
 
-            List<DatabaseConfig> configs = new ArrayList<>();
+            List<databaseConfig> configs = new ArrayList<>();
 
 
 //            DatabaseConfig config = new DatabaseConfig();
@@ -111,7 +124,7 @@ public class DatabaseConnectionApp {
             transformer.transform(source, result);
 
 
-            String connectionString = "";
+             connectionString = "";
             if ("MySQL".equalsIgnoreCase(config.getDatabaseType())) {
                 connectionString = "jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabaseName();
 
@@ -123,10 +136,10 @@ public class DatabaseConnectionApp {
 
             }
 
-            String decryptedUsername = config.isUsernameEncrypted() ? decrypt(config.getUsername(), SECRET_KEY) : config.getUsername();
-            String decryptedPassword = config.isPasswordEncrypted() ? decrypt(config.getPassword(), SECRET_KEY) : config.getPassword();
+            decryptedUsername = config.isUsernameEncrypted() ? decrypt(config.getUsername(), SECRET_KEY) : config.getUsername();
+            decryptedPassword = config.isPasswordEncrypted() ? decrypt(config.getPassword(), SECRET_KEY) : config.getPassword();
 
-            connection = DriverManager.getConnection(connectionString, decryptedUsername, decryptedPassword);
+//            connection = DriverManager.getConnection(connectionString, decryptedUsername, decryptedPassword);
 
 
 
@@ -553,36 +566,11 @@ public class DatabaseConnectionApp {
 //                e.printStackTrace();
 //            }
 
-            //String insertSQL = QueryManager.constructInsertStatement(tableName, fieldValues);
-            //PreparedStatement preparedStatement = connection.prepareStatement(insertSQL);
-
-
-
-            //int paramIndex = 1;
-            //for (String fieldName : fieldValues.keySet()) {
-                //preparedStatement.setObject(paramIndex++, fieldValues.get(fieldName));
-            //}
-
-            //preparedStatement.executeUpdate();
-            //preparedStatement.close();
-
-            // Close the database connection when done
-//            connection.close();
 
 
         } catch (Exception e) {
             e.printStackTrace();
-        }//finally {
-
-//            if (connection != null) {
-//                try {
-//                    connection.close();
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-
+        }
     }
 
 
@@ -626,8 +614,6 @@ public class DatabaseConnectionApp {
         }
         return data;
     }
-
-
 
 
 }

@@ -1,4 +1,5 @@
 package org.example.controllers;
+import org.example.database_connection;
 import org.example.QueryManager;
 import org.example.Response;
 import org.json.JSONObject;
@@ -9,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 public class Exam {
-    public static Response insertexam(String tableName, Map<String, String> fieldValues, Connection connection) {
+    public static Response insertexam(String tableName, Map<String, String> fieldValues) {
+        Connection connection = null;
         try {
+            connection = database_connection.getConnection();
             String insertSQL = QueryManager.constructInsertStatement(tableName, fieldValues);
             PreparedStatement preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
             int paramIndex = 1;
@@ -32,17 +35,16 @@ public class Exam {
             } else {
                 return new Response(500, new JSONObject().put("error", "Database error: " + e.getMessage())); // 500 Internal Server Error
             }
+        }finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
-
-
-
-
-
-
-
-
-
 
 //    public static Response insertexam(String tableName, Map<String, String> fieldValues, Connection connection) {
 //        try {
@@ -71,8 +73,10 @@ public class Exam {
 //        }
 //    }
 
-    public static Response updateExam(String tableName, String idColumn, int idValue, Map<String, String> fieldValues, Connection connection) {
+    public static Response updateExam(String tableName, String idColumn, int idValue, Map<String, String> fieldValues) {
+        Connection connection = null;
         try {
+            connection = database_connection.getConnection();
             boolean useCurrentTimestamp = "CURRENT_TIMESTAMP".equals(fieldValues.get("date_modified"));
             String updateSQL = QueryManager.constructUpdateStatement(tableName, idColumn, idValue, fieldValues, useCurrentTimestamp);
             PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
@@ -96,15 +100,36 @@ public class Exam {
         } catch (SQLException e) {
             e.printStackTrace();
             return new Response(500); // Internal server error
+        }finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
 
-    public static Response selectExam(Connection connection, String tableName, List<String> columns,
-                                         String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset,
-                                         List<String> joinClauses, String databaseType,Map<String, String> likeConditions) throws SQLException {
-        Object data = QueryManager.dynamicSelect(connection, tableName, columns, whereClause, groupBy, orderBy, havingClause, limit, joinClauses, databaseType, offset,likeConditions);
-        // Assuming the operation is always successful and returns a 200 status code
-        return new Response(200, data);
+
+    public static Response selectExam(String tableName, List<String> columns, String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset, List<String> joinClauses, String databaseType, Map<String, String> likeConditions) {
+        Connection connection = null;
+        try {
+            connection = database_connection.getConnection();
+            Object data = QueryManager.dynamicSelect(connection, tableName, columns, whereClause, groupBy, orderBy, havingClause, limit, joinClauses, databaseType, offset, likeConditions);
+            return new Response(200, data);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new Response(500); // Internal server error
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

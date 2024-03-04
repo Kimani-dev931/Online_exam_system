@@ -90,7 +90,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>org.example.DatabaseConnectionApp</mainClass>
+                            <mainClass>org.example.MainApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

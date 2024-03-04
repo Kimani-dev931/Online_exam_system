@@ -9,8 +9,6 @@ import org.example.controllers.Student;
 
 import java.util.*;
 
-import static org.example.DatabaseConnectionApp.connection;
-
 public class findAllSudents implements HttpHandler {
 
     @Override
@@ -60,7 +58,7 @@ public class findAllSudents implements HttpHandler {
             exchange.getRequestReceiver().receiveFullString((exchange1, message) -> {
                 try {
                     // Fetch data and handle empty result set
-                    Response response = Student.selectStudent(connection, "Student", columns, null, null, orderBy, null, pageSize, offset, null, null, likeConditions);
+                    Response response = Student.selectStudent( "Student", columns, null, null, orderBy, null, pageSize, offset, null, null, likeConditions);
                     if ("[]".equals(response.getData().toString().trim())) {
                         sendResponse(exchange1, StatusCodes.NOT_FOUND, "{\"error\":\"Query-parameter values not found or no matching data: " + userInputs.toString() + "\"}");
                     } else {

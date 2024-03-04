@@ -6,11 +6,8 @@ import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import org.example.Response;
 import org.example.controllers.Responses;
-import org.example.controllers.Student;
 
 import java.util.*;
-
-import static org.example.DatabaseConnectionApp.connection;
 
 public class findAllResponses implements HttpHandler {
     //    @Override
@@ -69,7 +66,7 @@ public class findAllResponses implements HttpHandler {
             exchange.getRequestReceiver().receiveFullString((exchange1, message) -> {
                 try {
                     // Fetch data and handle empty result set
-                    Response response = Student.selectStudent(connection, "Responses", columns, null, null, orderBy, null, pageSize, offset, null, null, likeConditions);
+                    Response response = Responses.selectResponses( "Responses", columns, null, null, orderBy, null, pageSize, offset, null, null, likeConditions);
                     if ("[]".equals(response.getData().toString().trim())) {
                         sendResponse(exchange1, StatusCodes.NOT_FOUND, "{\"error\":\"Query-parameter values not found or no matching data: " + userInputs.toString() + "\"}");
                     } else {

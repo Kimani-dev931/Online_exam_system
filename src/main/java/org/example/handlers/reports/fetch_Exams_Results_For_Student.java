@@ -7,8 +7,6 @@ import io.undertow.util.StatusCodes;
 import org.example.controllers.Reports;
 import org.example.Response;
 
-import static org.example.DatabaseConnectionApp.connection;
-
 public class fetch_Exams_Results_For_Student implements HttpHandler {
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
@@ -16,7 +14,7 @@ public class fetch_Exams_Results_For_Student implements HttpHandler {
         String studentId = exchange.getQueryParameters().get("studentId").getFirst();
         String examId = exchange.getQueryParameters().get("examId").getFirst();
         try {
-            Response response = Reports.fetchExamResultsForStudent(connection, Integer.parseInt(studentId),Integer.parseInt(examId));
+            Response response = Reports.fetchExamResultsForStudent( Integer.parseInt(studentId),Integer.parseInt(examId));
             sendResponse(exchange, response.getStatusCode(), response.getData().toString()); // Assuming response.getData() returns a String or can be converted to String
         }
         catch (NumberFormatException e) {

@@ -104,7 +104,7 @@ public class QueryManager {
         }
         if (limit != null) {
             query.append(" LIMIT ").append(limit);
-            // Only append OFFSET if it's not null and a LIMIT has been specified
+
             if (offset != null) {
                 query.append(" OFFSET ").append(offset);
             }
@@ -136,21 +136,7 @@ public class QueryManager {
         return resultSetToJson(rs);
     }
 
-//    public static JSONArray resultSetToJsonArray(ResultSet rs) throws SQLException {
-//        JSONArray json = new JSONArray();
-//        ResultSetMetaData rsmd = rs.getMetaData();
-//        int numColumns = rsmd.getColumnCount();
-//
-//        while (rs.next()) {
-//            JSONObject obj = new JSONObject();
-//            for (int i = 1; i <= numColumns; i++) {
-//                String column_name = rsmd.getColumnName(i);
-//                obj.put(column_name, rs.getObject(column_name));
-//            }
-//            json.put(obj);
-//        }
-//        return json;
-//    }
+
 
     public static Object resultSetToJson(ResultSet rs) throws SQLException {
         JSONArray json = new JSONArray();
@@ -172,7 +158,7 @@ public class QueryManager {
         if (rowCount == 1) {
             return json.getJSONObject(0);
         } else {
-            // For multiple records, return the JSONArray.
+
             return json;
         }
     }

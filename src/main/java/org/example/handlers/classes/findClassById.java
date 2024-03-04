@@ -7,8 +7,6 @@ import io.undertow.util.StatusCodes;
 import org.example.controllers.Class;
 import org.example.Response;
 
-import static org.example.DatabaseConnectionApp.connection;
-
 public class findClassById implements HttpHandler {
     @Override
     public void handleRequest(HttpServerExchange exchange) {
@@ -16,7 +14,7 @@ public class findClassById implements HttpHandler {
         String whereClause = "class_id = " + idValue;
         exchange.getRequestReceiver().receiveFullString((exchange1, message) -> {
             try {
-                Response response = Class.selectclass(connection, "Class", null, whereClause, null, null, null, null, null, null, null,null);
+                Response response = Class.selectclass( "Class", null, whereClause, null, null, null, null, null, null, null,null);
 
                 // Assuming response.getData() returns a JSON string representation of an array
                 String responseData = response.getData().toString();

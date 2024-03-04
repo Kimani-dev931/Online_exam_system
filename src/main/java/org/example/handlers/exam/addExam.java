@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import static org.example.DatabaseConnectionApp.connection;
 
 
 import io.undertow.server.handlers.form.FormData;
@@ -66,7 +65,7 @@ public class addExam implements HttpHandler {
 
     private void performDatabaseOperation(HttpServerExchange exchange, Map<String, String> fieldValues) {
         try {
-            Response response = Exam.insertexam("Exam", fieldValues, connection);
+            Response response = Exam.insertexam("Exam", fieldValues);
 
             // Check if the response is null
             if (response == null) {

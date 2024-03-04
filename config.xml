@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><database-config>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database-config>
     <database-type>MySQL</database-type>
     <database-name>online_exam_system</database-name>
     <database-host>localhost</database-host>
