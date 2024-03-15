@@ -6,6 +6,7 @@ import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import org.example.controllers.Class;
 import org.example.Response;
+import org.example.handlers.authentication.loginteacher;
 
 import java.util.*;
 
@@ -13,6 +14,14 @@ public class findAllClasses implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) {
+        String token = extractToken(exchange);
+
+        // Validate the token
+        if (token == null || !loginteacher.validateToken(token)) {
+            sendResponse(exchange, 401, "{\"error\":\"Invalid or missing token\"}");
+            return;
+        }
+
         try {
             // Attempt to parse 'page' and 'pageSize' from query parameters
             int page = Integer.parseInt(exchange.getQueryParameters().getOrDefault("page", new ArrayDeque<>(Arrays.asList("1"))).getFirst());
@@ -32,18 +41,18 @@ public class findAllClasses implements HttpHandler {
             );
 
             Map<String, String> likeConditions = new HashMap<>();
-            StringBuilder userInputs = new StringBuilder(); // To accumulate user inputs for error messaging
+            StringBuilder userInputs = new StringBuilder();
 
-            // Automatically construct likeConditions based on the mapping
+
             exchange.getQueryParameters().forEach((paramName, value) -> {
                 String dbColumnName = paramToColumnMap.get(paramName);
-                if (dbColumnName != null) { // Only add if the parameter maps to a known column
+                if (dbColumnName != null) {
                     likeConditions.put(dbColumnName, value.getFirst() + "%");
                     userInputs.append(paramName).append(": ").append(value.getFirst()).append(", ");
                 }
             });
 
-            // Remove the last comma and space
+
             if (userInputs.length() > 0) {
                 userInputs.setLength(userInputs.length() - 2); // Adjust for last ", "
             }
@@ -75,6 +84,15 @@ public class findAllClasses implements HttpHandler {
         exchange.setStatusCode(statusCode);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(jsonData);
+    }
+    private String extractToken(HttpServerExchange exchange) {
+        // token is sent as a Bearer token in the Authorization in postman
+        String authorizationHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            // Extract token part
+            return authorizationHeader.substring(7);
+        }
+        return null;
     }
 
 

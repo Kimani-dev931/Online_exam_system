@@ -57,38 +57,38 @@ public class MainApp {
 
 //            DatabaseConfig config = new DatabaseConfig();
 
-            String databaseType = (String) xpath.compile("/database-config/database-type").evaluate(doc, XPathConstants.STRING);
+            String databaseType = (String) xpath.compile("/DATABASE-CONFIG/DATABASE-TYPE").evaluate(doc, XPathConstants.STRING);
             config.setDatabaseType(databaseType);
 
-            String databaseName = (String) xpath.compile("/database-config/database-name").evaluate(doc, XPathConstants.STRING);
+            String databaseName = (String) xpath.compile("/DATABASE-CONFIG/DATABASE-NAME").evaluate(doc, XPathConstants.STRING);
             config.setDatabaseName(databaseName);
 
-            String databaseHost = (String) xpath.compile("/database-config/database-host").evaluate(doc, XPathConstants.STRING);
+            String databaseHost = (String) xpath.compile("/DATABASE-CONFIG/DATABASE-HOST").evaluate(doc, XPathConstants.STRING);
             config.setDatabaseHost(databaseHost);
 
-            String username = (String) xpath.compile("/database-config/username/text()").evaluate(doc, XPathConstants.STRING);
+            String username = (String) xpath.compile("/DATABASE-CONFIG/USERNAME/text()").evaluate(doc, XPathConstants.STRING);
             config.setUsername(username);
 
-            String password = (String) xpath.compile("/database-config/password/text()").evaluate(doc, XPathConstants.STRING);
+            String password = (String) xpath.compile("/DATABASE-CONFIG/PASSWORD/text()").evaluate(doc, XPathConstants.STRING);
             config.setPassword(password);
 
-            String usernameEncrypted = (String) xpath.compile("/database-config/username/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
+            String usernameEncrypted = (String) xpath.compile("/DATABASE-CONFIG/USERNAME/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
             config.setUsernameEncrypted("YES".equals(usernameEncrypted));
 
-            String passwordEncrypted = (String) xpath.compile("/database-config/password/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
+            String passwordEncrypted = (String) xpath.compile("/DATABASE-CONFIG/PASSWORD/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
             config.setPasswordEncrypted("YES".equals(passwordEncrypted));
 
-            String iothreads = (String) xpath.compile("/database-config/io-threads").evaluate(doc, XPathConstants.STRING);
+            String iothreads = (String) xpath.compile("/DATABASE-CONFIG/IO-THREADS").evaluate(doc, XPathConstants.STRING);
             config.setiothreads(iothreads);
 
 
-            String workerthreads = (String) xpath.compile("/database-config/worker-threads").evaluate(doc, XPathConstants.STRING);
+            String workerthreads = (String) xpath.compile("/DATABASE-CONFIG/WORKER-THREADS").evaluate(doc, XPathConstants.STRING);
             config.setworkerthreads(workerthreads);
 
-            String undertowserverport = (String) xpath.compile("/database-config/undertow-server-port").evaluate(doc, XPathConstants.STRING);
+            String undertowserverport = (String) xpath.compile("/DATABASE-CONFIG/UNDERTOW-SERVER-PORT").evaluate(doc, XPathConstants.STRING);
             config.setundertowserverport(undertowserverport);
 
-            String undertowserverhost = (String) xpath.compile("/database-config/undertow-server-host").evaluate(doc, XPathConstants.STRING);
+            String undertowserverhost = (String) xpath.compile("/DATABASE-CONFIG/UNDERTOW-SERVER-HOST").evaluate(doc, XPathConstants.STRING);
             config.setundertowserverhost(undertowserverhost);
 
 
@@ -96,11 +96,11 @@ public class MainApp {
             configs.add(config);
 
 
-            String usernameEncryptedAttribute = (String) xpath.compile("/database-config/username/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
+            String usernameEncryptedAttribute = (String) xpath.compile("/DATABASE-CONFIG/USERNAME/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
             boolean shouldEncryptUsername = !"YES".equals(usernameEncryptedAttribute);
 
             // Check if the "ENCRYPTED" attribute is set to "NO" for password
-            String passwordEncryptedAttribute = (String) xpath.compile("/database-config/password/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
+            String passwordEncryptedAttribute = (String) xpath.compile("/DATABASE-CONFIG/PASSWORD/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
             boolean shouldEncryptPassword = !"YES".equals(passwordEncryptedAttribute);
             // Encrypt the username and password if needed
             if (shouldEncryptUsername) {
@@ -141,430 +141,7 @@ public class MainApp {
 
 //            connection = DriverManager.getConnection(connectionString, decryptedUsername, decryptedPassword);
 
-
-
             RestAPIServer.start();
-
-            // This will execute 'SELECT * FROM Student
-//            try {
-//
-//                JSONArray results = Student.selectStudent(connection, "Student", null, null, null, null, null, null);
-//                System.out.println(results.toString());
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-            // 2 :Display all exams set by a teacher:
-//            try {
-//                // Columns to be selected
-//                List<String> columns = Arrays.asList(
-//                        "e.exam_id",
-//                        "e.class_id",
-//                        "e.subject_id",
-//                        "e.exam_date",
-//                        "e.starting_time",
-//                        "e.time_taken",
-//                        "e.exam_name",
-//                        "t.first_name",
-//                        "t.last_name"
-//                );
-//
-//                // Join clause
-//                List<String> joinClauses = Arrays.asList(
-//                        "JOIN Teacher t ON e.teacher_id = t.teacher_id"
-//                );
-//
-//                // Where clause
-//                String whereClause = "t.teacher_id = 1";
-//
-//                // This will execute the specified SELECT query
-//                JSONArray results = Student.selectStudent(
-//                        connection,
-//                        "Exam e", // Table name with alias
-//                        columns,
-//                        whereClause,
-//                        null,
-//                        null,
-//                        null,
-//                        null,
-//                        null,
-//                        joinClauses,
-//                        null
-//                );
-//
-//                System.out.println(results.toString());
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-
-//            try {
-//                // Columns to be selected
-//                List<String> columns = Arrays.asList(
-//                        "e.exam_id",
-//                        "e.class_id",
-//                        "e.subject_id",
-//                        "e.exam_date",
-//                        "e.starting_time",
-//                        "e.time_taken",
-//                        "e.exam_name",
-//                        "t.first_name",
-//                        "t.last_name"
-//                );
-//
-//                // Join clause
-//                List<String> joinClauses = Arrays.asList(
-//                        "JOIN Teacher t ON e.teacher_id = t.teacher_id"
-//                );
-//
-//                // Where clause
-//                String whereClause = "t.teacher_id = 1";
-//
-//                // Execute the specified SELECT query
-//                Response response = Student.selectStudent(
-//                        connection,
-//                        "Exam e", // Table name with alias
-//                        columns,
-//                        whereClause,
-//                        null, // groupBy
-//                        null, // orderBy
-//                        null, // havingClause
-//                        null, // limit
-//                        null, // offset
-//                        joinClauses,
-//                        null // databaseType
-//                );
-//
-//                // Check if the response was successful and extract the data
-//                if (response.getStatusCode() == 200) {
-//                    JSONArray results = (JSONArray) response.getData(); // Cast the data back to JSONArray
-//                    // Now you can work with 'results' as a JSONArray
-//                } else {
-//                    // Handle the case where the response indicates an error or no data
-//                    System.out.println("Error or no data: " + response.getMessage());
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-
-            //3:Generate a report on the answers provided by a pupil for an exam and their percentage score
-//            try {
-//                List<String> columns = Arrays.asList(
-//                        "s.student_id", "s.first_name", "s.last_name",
-//                        "q.exam_id", "q.question_text", "o.option_value", "o.correct_answer", "q.question_marks"
-//                );
-//
-//                List<String> joinClauses = Arrays.asList(
-//                        "JOIN Questions q ON r.questions_id = q.questions_id",
-//                        "JOIN Options o ON r.option_id = o.option_id",
-//                        "JOIN Student s ON r.student_id = s.student_id"
-//               );
-//
-//               String whereClause = "s.student_id = 3 AND q.exam_id = 1";
-//
-//               JSONArray results = Exam.selectExam(connection, "Responses r", columns,
-//                        whereClause, null, null, null, joinClauses);
-//
-//                // Process the results to calculate percentage score
-//                JSONArray processedResults = new JSONArray();
-//                for (int i = 0; i < results.length(); i++) {
-//                    JSONObject row = results.getJSONObject(i);
-//                    // Extract necessary data for calculation
-//                    boolean correctAnswer = row.getBoolean("correct_answer");
-//                    int questionMarks = row.getInt("question_marks");
-//
-//
-//
-//                    double percentageScore = correctAnswer ? questionMarks : 0;
-//
-//                    // Add the calculated score to the result
-//                    row.put("percentage_score", percentageScore);
-//                    processedResults.put(row);
-//                }
-//
-//                System.out.println(processedResults.toString());
-//           } catch (SQLException e) {
-//               e.printStackTrace();
-//            }
-            //4: Generate a Report on the Top 5 Pupils with the Highest Scores in a Certain Exam
-//            try {
-//                List<String> columns = Arrays.asList(
-//                        "s.student_id", "s.first_name", "s.last_name",
-//                        "SUM(CASE WHEN o.correct_answer = 1 THEN q.question_marks ELSE 0 END) AS total_score"
-//                );
-//
-//                List<String> joinClauses = Arrays.asList(
-//                        "JOIN Questions q ON r.questions_id = q.questions_id",
-//                        "JOIN Options o ON r.option_id = o.option_id",
-//                        "JOIN Student s ON r.student_id = s.student_id"
-//                );
-//
-//                String whereClause = "q.exam_id = 1";
-//                String groupBy = "s.student_id";
-//
-//                // Fetching total scores for each student
-//                JSONArray studentScores = Exam.selectExam(connection, "Responses r", columns,
-//                        whereClause, groupBy, "total_score DESC", 5, joinClauses);
-//
-//                // Fetching total possible score for the exam
-//                PreparedStatement totalScoreStmt = connection.prepareStatement(
-//                        "SELECT SUM(question_marks) AS total_possible_score FROM Questions WHERE exam_id = 1"
-//                );
-//                ResultSet totalScoreRs = totalScoreStmt.executeQuery();
-//                double totalPossibleScore = 0;
-//                if (totalScoreRs.next()) {
-//                    totalPossibleScore = totalScoreRs.getDouble("total_possible_score");
-//                }
-//
-//                // Calculate percentage scores
-//                JSONArray processedResults = new JSONArray();
-//                for (int i = 0; i < studentScores.length(); i++) {
-//                    JSONObject row = studentScores.getJSONObject(i);
-//                    double totalScore = row.getDouble("total_score");
-//                    double percentageScore = (totalScore / totalPossibleScore) * 100;
-//                    row.put("percentage_score", percentageScore);
-//                    processedResults.put(row);
-//                }
-//
-//                System.out.println(processedResults.toString());
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-
-            //5:Generate a report sheet of the scores for all pupils in each of the exams done and rank them from the highest average score to lowest.
-//            try {
-//                List<String> columns = new ArrayList<>();
-//                // Define the columns to select, including subject scores and overall average
-//                if ("MySQL".equalsIgnoreCase(config.getDatabaseType())){
-//                   columns = Arrays.asList(
-//                        "S.student_id",
-//                        "S.first_name",
-//                        "S.last_name",
-//                        "SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) AS English_Score",
-//                        "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) AS Mathematics_Score",
-//                        "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) AS Science_Score",
-//                        "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) AS Kiswahili_Score",
-//                        "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)) AS SSRE_Score",
-//                        "(SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0))) AS Total_Score",
-//                        "((SUM(IF(sub.subject_text = 'English', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Mathematics', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Science', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Kiswahili', Q.question_marks, 0)) + " +
-//                                "SUM(IF(sub.subject_text = 'Social Studies and Religious Education', Q.question_marks, 0)))/5) AS Average_Score"
-//                   );
-//                } else if ("MicrosoftSQL".equalsIgnoreCase(config.getDatabaseType())) {
-//                    columns = Arrays.asList(
-//                        "S.student_id",
-//                        "S.first_name",
-//                        "S.last_name",
-//                        "SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) AS English_Score",
-//                        "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) AS Mathematics_Score",
-//                        "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) AS Science_Score",
-//                        "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) AS Kiswahili_Score",
-//                        "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END) AS SSRE_Score",
-//                        "(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
-//                                "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
-//                                "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
-//                                "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
-//                                "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END)) AS Total_Score",
-//                        "((SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
-//                                "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
-//                                "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
-//                                "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
-//                                "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END))/5) AS Average_Score"
-//                    );
-//
-//                }else if ("PostgreSQL".equalsIgnoreCase(config.getDatabaseType())) {
-//                    columns = Arrays.asList(
-//                            "S.student_id",
-//                            "S.first_name",
-//                            "S.last_name",
-//                            "SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) AS English_Score",
-//                            "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) AS Mathematics_Score",
-//                            "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) AS Science_Score",
-//                            "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) AS Kiswahili_Score",
-//                            "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END) AS SSRE_Score",
-//                            "(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END)) AS Total_Score",
-//                            "((SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) + " +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) + " +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) + " +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) + " +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END))/5) AS Average_Score"
-//                    );
-//
-//
-//                }
-//                List<String> joinClauses = Arrays.asList(
-//                        "JOIN Responses R ON S.student_id = R.student_id",
-//                        "JOIN Options O ON R.option_id = O.option_id AND O.correct_answer = true",
-//                        "JOIN Questions Q ON R.questions_id = Q.questions_id",
-//                        "JOIN Exam E ON Q.exam_id = E.exam_id",
-//                        "JOIN Subjects sub ON E.subject_id = sub.subject_id"
-//                );
-//
-//                // Define the GROUP BY clause
-//                String groupBy = "S.student_id, S.first_name, S.last_name";
-//
-//                // Define the ORDER BY clause to sort by Total_Score and Average_Score in descending order
-//                String orderBy = "Total_Score DESC, Average_Score DESC";
-//
-//                // Execute the query and get the results, including the orderBy parameter
-//                JSONArray results = Exam.selectExam(connection, "Student S", columns, null, groupBy, orderBy, null,null,null, joinClauses,databaseType);
-//
-//                // Write the results to a CSV file
-//                FileWriter csvWriter = new FileWriter("output.csv");
-//                csvWriter.append("Student ID,First Name,Last Name,English Score,Mathematics Score,Science Score,Kiswahili Score,SSRE Score,Total Score,Average Score\n");
-//
-//                for (int i = 0; i < results.length(); i++) {
-//                    JSONObject row = results.getJSONObject(i);
-//                    System.out.println(row.toString());
-//                    csvWriter.append(row.getInt("student_id") + ",");
-//                    csvWriter.append(row.getString("first_name") + ",");
-//                    csvWriter.append(row.getString("last_name") + ",");
-//                    csvWriter.append(row.getDouble("english_score") + ",");
-//                    csvWriter.append(row.getDouble("mathematics_score") + ",");
-//                    csvWriter.append(row.getDouble("science_score") + ",");
-//                    csvWriter.append(row.getDouble("kiswahili_score") + ",");
-//                    csvWriter.append(row.getDouble("ssre_score") + ",");
-//                    csvWriter.append(row.getDouble("total_score") + ",");
-//                    csvWriter.append(row.getDouble("average_score") + "\n");
-//                }
-//
-//                csvWriter.flush();
-//                csvWriter.close();
-//
-//                System.out.println("CSV Report sheet file created successfully.");
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                List<String> columns = new ArrayList<>();
-//                String totalAndAverageCalculation = "(ROUND(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) / " +
-//                        "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'English') * 100, 1) + " +
-//                        "ROUND(SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) / " +
-//                        "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Mathematics') * 100, 1) + " +
-//                        "ROUND(SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) / " +
-//                        "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Science') * 100, 1) + " +
-//                        "ROUND(SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) / " +
-//                        "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Kiswahili') * 100, 1) + " +
-//                        "ROUND(SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END) / " +
-//                        "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Social Studies and Religious Education') * 100, 1))";
-//
-//                // Adjust the columns list based on the database type
-//                if ("MySQL".equalsIgnoreCase(config.getDatabaseType()) || "PostgreSQL".equalsIgnoreCase(config.getDatabaseType())) {
-//                    columns = Arrays.asList(
-//                            "S.student_id",
-//                            "S.first_name",
-//                            "S.last_name",
-//                            "ROUND(SUM(CASE WHEN sub.subject_text = 'English' THEN Q.question_marks ELSE 0 END) / " +
-//                                    "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'English') * 100, 1) AS English",
-//                            "ROUND(SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN Q.question_marks ELSE 0 END) / " +
-//                                    "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Mathematics') * 100, 1) AS Mathematics",
-//                            "ROUND(SUM(CASE WHEN sub.subject_text = 'Science' THEN Q.question_marks ELSE 0 END) / " +
-//                                    "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Science') * 100, 1) AS Science",
-//                            "ROUND(SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN Q.question_marks ELSE 0 END) / " +
-//                                    "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Kiswahili') * 100, 1) AS Kiswahili",
-//                            "ROUND(SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN Q.question_marks ELSE 0 END) / " +
-//                                    "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Social Studies and Religious Education') * 100, 1) AS SSRE",
-//                            totalAndAverageCalculation + " AS Total",
-//                            totalAndAverageCalculation + " / 5 AS Average"
-//                    );
-//                } else if ("MicrosoftSQL".equalsIgnoreCase(config.getDatabaseType())) {
-//                    columns = Arrays.asList(
-//                            "S.student_id",
-//                            "S.first_name",
-//                            "S.last_name",
-//                            "ROUND(SUM(CASE WHEN sub.subject_text = 'English' THEN q.question_marks ELSE 0 END) * 100.0 / " +
-//                                    "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'English'), 1) AS English",
-//                            "ROUND(SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN q.question_marks ELSE 0 END) * 100.0 / " +
-//                                    "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Mathematics'), 1) AS Mathematics",
-//                            "ROUND(SUM(CASE WHEN sub.subject_text = 'Science' THEN q.question_marks ELSE 0 END) * 100.0 / " +
-//                                    "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Science'), 1) AS Science",
-//                            "ROUND(SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN q.question_marks ELSE 0 END) * 100.0 / " +
-//                                    "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Kiswahili'), 1) AS Kiswahili",
-//                            "ROUND(SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN q.question_marks ELSE 0 END) * 100.0 / " +
-//                                    "(SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Social Studies and Religious Education'), 1) AS SSRE",
-//                            "ROUND((" +
-//                                    "SUM(CASE WHEN sub.subject_text = 'English' THEN q.question_marks ELSE 0 END) * 100.0 / (SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'English') +" +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN q.question_marks ELSE 0 END) * 100.0 / (SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Mathematics') +" +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Science' THEN q.question_marks ELSE 0 END) * 100.0 / (SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Science') +" +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN q.question_marks ELSE 0 END) * 100.0 / (SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Kiswahili') +" +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN q.question_marks ELSE 0 END) * 100.0 / (SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Social Studies and Religious Education')" +
-//                                    "), 1) AS Total",
-//                            "ROUND((" +
-//                                    "SUM(CASE WHEN sub.subject_text = 'English' THEN q.question_marks ELSE 0 END) * 100.0 / (SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'English') +" +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Mathematics' THEN q.question_marks ELSE 0 END) * 100.0 / (SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Mathematics') +" +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Science' THEN q.question_marks ELSE 0 END) * 100.0 / (SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Science') +" +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Kiswahili' THEN q.question_marks ELSE 0 END) * 100.0 / (SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Kiswahili') +" +
-//                                    "SUM(CASE WHEN sub.subject_text = 'Social Studies and Religious Education' THEN q.question_marks ELSE 0 END) * 100.0 / (SELECT SUM(question_marks) FROM Questions JOIN Exam ON Questions.exam_id = Exam.exam_id JOIN Subjects ON Exam.subject_id = Subjects.subject_id WHERE Subjects.subject_text = 'Social Studies and Religious Education')" +
-//                                    ") / 5, 1) AS Average"
-//                    );
-//                }
-//
-//                List<String> joinClauses = Arrays.asList(
-//                        "JOIN Responses R ON S.student_id = R.student_id",
-//                        "JOIN Options O ON R.option_id = O.option_id AND O.correct_answer = true",
-//                        "JOIN Questions Q ON R.questions_id = Q.questions_id",
-//                        "JOIN Exam E ON Q.exam_id = E.exam_id",
-//                        "JOIN Subjects sub ON E.subject_id = sub.subject_id"
-//                );
-//
-//                String groupBy = "S.student_id, S.first_name, S.last_name";
-//                String orderBy = "Total DESC, Average DESC"; // Ordering by Total and Average
-//
-//                JSONArray results = Exam.selectExam(connection, "Student S", columns, null, groupBy, orderBy, null, joinClauses,databaseType);
-//                // Write results to CSV
-//                try (FileWriter csvWriter = new FileWriter("student_scores_report.csv")) {
-//                    csvWriter.append("Student ID,First Name,Last Name,English,Mathematics,Science,Kiswahili,SSRE,Total,Average\n");
-//                    for (int i = 0; i < results.length(); i++) {
-//                        JSONObject row = results.getJSONObject(i);
-//                        System.out.println(row.toString());
-//                        csvWriter.append(
-//                                row.getInt("student_id") + "," +
-//                                        row.getString("first_name") + "," +
-//                                        row.getString("last_name") + "," +
-//                                        row.getDouble("english") + "," +
-//                                        row.getDouble("mathematics") + "," +
-//                                        row.getDouble("science") + "," +
-//                                        row.getDouble("kiswahili") + "," +
-//                                        row.getDouble("ssre") + "," +
-//                                        row.getDouble("total") + "," +
-//                                        row.getDouble("average") + "\n"
-//                        );
-//                    }
-//                    csvWriter.flush();
-//                }
-//
-//                System.out.println("CSV file created successfully.");
-//            } catch (SQLException | IOException e) {
-//                e.printStackTrace();
-//            }
-
-
-            //update student
-//            String tableName = "Student";
-//            String idColumn = "student_id";
-//            int idValue = 3;
-//            Map<String, String> fieldValues = new HashMap<>();
-//            fieldValues.put("first_name", "Esther");
-//            fieldValues.put("date_modified", "CURRENT_TIMESTAMP");
-//            Student.updateStudent(tableName, idColumn, idValue, fieldValues, connection);
-
-//            try {
-//                JSONArray results = Student.selectStudent(connection, "Student", Arrays.asList("student_id", "first_name"),
-//                        "gender = 'Male'", null, "student_id DESC", 10, Arrays.asList("JOIN Class ON Student.class_id = Class.class_id"));
-//                System.out.println(results.toString());
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
 
 
 

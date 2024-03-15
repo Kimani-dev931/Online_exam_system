@@ -1,19 +1,20 @@
 package org.example.controllers;
 
-import org.example.MainApp;
 import org.example.QueryManager;
-import org.example.database_connection;
 import org.example.Response;
+import org.example.database_connection;
 import org.json.JSONObject;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Options {
-
-    public static Response insertoptions(String tableName, Map<String, String> fieldValues) {
+public class userauth {
+    public static Response insertuserauth(String tableName, Map<String, String> fieldValues) {
         Connection connection = null;
         try {
             connection = database_connection.getConnection();
@@ -29,7 +30,7 @@ public class Options {
                 throw new SQLException("Creating user failed, no rows affected.");
             }
             JSONObject jsonData = new JSONObject(fieldValues);
-            return new Response(201, jsonData);
+            return new Response(201, jsonData); // 201 Created
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -49,7 +50,8 @@ public class Options {
         }
     }
 
-    public static Response updateOptions(String tableName, String idColumn, int idValue, Map<String, String> fieldValues) {
+
+    public static Response updateuserauth(String tableName, String idColumn, int idValue, Map<String, String> fieldValues) {
         Connection connection = null;
         try {
             connection = database_connection.getConnection();
@@ -87,8 +89,47 @@ public class Options {
         }
     }
 
+    public static Response updateObjectuserauth(String tableName, String idColumn, int idValue, Map<String, Object> fieldValues) {
+        Connection connection = null;
+        try {
+            connection = database_connection.getConnection();
+            boolean useCurrentTimestamp = "CURRENT_TIMESTAMP".equals(fieldValues.get("date_modified"));
+            String updateSQL = QueryManager.construct_hashmap_object_UpdateStatement(tableName, idColumn, idValue, fieldValues, useCurrentTimestamp);
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
 
-    public static Response selectOptions(String tableName, List<String> columns, String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset, List<String> joinClauses, String databaseType, Map<String, String> likeConditions) {
+            int paramIndex = 1;
+            for (String key : fieldValues.keySet()) {
+                if (!(useCurrentTimestamp && "date_modified".equals(key))) {
+                    preparedStatement.setObject(paramIndex++, fieldValues.get(key));
+                }
+            }
+
+            int affectedRows = preparedStatement.executeUpdate();
+            preparedStatement.close();
+
+            if (affectedRows > 0) {
+                JSONObject jsonData = new JSONObject(fieldValues);
+                return new Response(200, jsonData); // Assuming successful update
+            } else {
+                return new Response(204, new HashMap<>()); // No content updated
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new Response(500); // Internal server error
+        }finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+
+    public static Response selectauth(String tableName, List<String> columns, String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset, List<String> joinClauses, String databaseType, Map<String, String> likeConditions) {
         Connection connection = null;
         try {
             connection = database_connection.getConnection();
@@ -107,4 +148,6 @@ public class Options {
             }
         }
     }
+
+
 }

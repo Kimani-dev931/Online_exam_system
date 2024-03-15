@@ -6,6 +6,7 @@ import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import org.example.Response;
 import org.example.controllers.Responses;
+import org.example.handlers.authentication.loginteacher;
 
 import java.util.*;
 
@@ -25,6 +26,15 @@ public class findAllResponses implements HttpHandler {
 //        });
 //    }
     public void handleRequest(HttpServerExchange exchange) {
+
+
+        String token = extractToken(exchange);
+
+        // Validate the token
+        if (token == null || !loginteacher.validateToken(token)) {
+            sendResponse(exchange, 401, "{\"error\":\"Invalid or missing token\"}");
+            return;
+        }
         try {
             // Attempt to parse 'page' and 'pageSize' from query parameters
             int page = Integer.parseInt(exchange.getQueryParameters().getOrDefault("page", new ArrayDeque<>(Arrays.asList("1"))).getFirst());
@@ -87,5 +97,15 @@ public class findAllResponses implements HttpHandler {
         exchange.setStatusCode(statusCode);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(jsonData);
+    }
+
+    private String extractToken(HttpServerExchange exchange) {
+        // token is sent as a Bearer token in the Authorization in postman
+        String authorizationHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            // Extract token part
+            return authorizationHeader.substring(7);
+        }
+        return null;
     }
 }

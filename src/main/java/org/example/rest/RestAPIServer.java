@@ -28,6 +28,8 @@ public class RestAPIServer {
                     .addPrefixPath(BASE_REST_API_URL+"/students", Routes.student())
                     .addPrefixPath(BASE_REST_API_URL+"/subjects", Routes.subjects())
                     .addPrefixPath(BASE_REST_API_URL+"/teachers", Routes.teacher())
+                    .addPrefixPath(BASE_REST_API_URL+"/login", Routes.login())
+                    .addPrefixPath(BASE_REST_API_URL+"/refresh-token", Routes.refresh())
 
                     .addPrefixPath("/", new FallBack())
                     ;

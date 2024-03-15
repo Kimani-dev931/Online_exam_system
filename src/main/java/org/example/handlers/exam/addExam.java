@@ -6,6 +6,7 @@ import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import org.example.controllers.Exam;
 import org.example.Response;
+import org.example.handlers.authentication.loginteacher;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -19,6 +20,16 @@ public class addExam implements HttpHandler {
 
     @Override
     public void handleRequest(final HttpServerExchange exchange) {
+        String token = extractToken(exchange);
+
+        // Validate the token
+        if (token == null || !loginteacher.validateToken(token)) {
+            sendResponse(exchange, 401, "{\"error\":\"Invalid or missing token\"}");
+            return;
+        }
+
+
+
         // Determine the content type
         String contentType = exchange.getRequestHeaders().getFirst(Headers.CONTENT_TYPE);
 
@@ -91,6 +102,16 @@ public class addExam implements HttpHandler {
         Map<String, String> map = new HashMap<>();
         json.keys().forEachRemaining(key -> map.put(key, json.optString(key)));
         return map;
+    }
+
+    private String extractToken(HttpServerExchange exchange) {
+        // token is sent as a Bearer token in the Authorization in postman
+        String authorizationHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            // Extract token part
+            return authorizationHeader.substring(7);
+        }
+        return null;
     }
 
 }

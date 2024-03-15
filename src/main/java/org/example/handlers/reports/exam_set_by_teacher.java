@@ -6,6 +6,7 @@ import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import org.example.controllers.Reports;
 import org.example.Response;
+import org.example.handlers.authentication.loginteacher;
 
 import static org.example.MainApp.connection;
 
@@ -13,6 +14,14 @@ import static org.example.MainApp.connection;
 public class exam_set_by_teacher implements HttpHandler {
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
+
+        String token = extractToken(exchange);
+
+        // Validate the token
+        if (token == null || !loginteacher.validateToken(token)) {
+            sendResponse(exchange, 401, "{\"error\":\"Invalid or missing token\"}");
+            return;
+        }
 
         String teacherId = exchange.getQueryParameters().get("teacherId").getFirst();
         try {
@@ -31,5 +40,14 @@ public class exam_set_by_teacher implements HttpHandler {
         exchange.setStatusCode(statusCode);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(jsonData);
+    }
+    private String extractToken(HttpServerExchange exchange) {
+        // token is sent as a Bearer token in the Authorization in postman
+        String authorizationHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            // Extract token part
+            return authorizationHeader.substring(7);
+        }
+        return null;
     }
 }

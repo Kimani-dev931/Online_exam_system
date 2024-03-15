@@ -10,6 +10,7 @@ import io.undertow.util.StatusCodes;
 import org.example.controllers.Class;
 
 import org.example.Response;
+import org.example.handlers.authentication.loginteacher;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -19,7 +20,15 @@ public class addClass implements HttpHandler {
 
     @Override
     public void handleRequest(final HttpServerExchange exchange) {
-        // Determine the content type
+        String token = extractToken(exchange);
+
+        // Validate the token
+        if (token == null || !loginteacher.validateToken(token)) {
+            sendResponse(exchange, 401, "{\"error\":\"Invalid or missing token\"}");
+            return;
+        }
+
+        // Proceed
         String contentType = exchange.getRequestHeaders().getFirst(Headers.CONTENT_TYPE);
 
         if (contentType != null && contentType.contains("application/json")) {
@@ -44,12 +53,11 @@ public class addClass implements HttpHandler {
                         Map<String, String> fieldValues = new HashMap<>();
                         for (String fieldName : formData) {
                             FormData.FormValue formValue = formData.getFirst(fieldName);
-                            if (formValue.isFile()) {
-                                // Handle file uploads here
-                            } else {
+                            if (!formValue.isFile()) {
                                 // Regular form field
                                 fieldValues.put(fieldName, formValue.getValue());
                             }
+
                         }
                         performDatabaseOperation(exchange, fieldValues);
                     } catch (Exception e) {
@@ -92,4 +100,14 @@ public class addClass implements HttpHandler {
         json.keys().forEachRemaining(key -> map.put(key, json.optString(key)));
         return map;
     }
+    private String extractToken(HttpServerExchange exchange) {
+        // token is sent as a Bearer token in the Authorization header
+        String authorizationHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            // Extract token part
+            return authorizationHeader.substring(7);
+        }
+        return null;
+    }
+
 }

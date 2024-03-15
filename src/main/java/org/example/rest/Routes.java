@@ -10,6 +10,9 @@ import org.example.handlers.classes.updateClass;
 import org.example.handlers.exam.addExam;
 import org.example.handlers.exam.findAllExams;
 import org.example.handlers.exam.findExamsById;
+import org.example.handlers.authentication.Refresh;
+import org.example.handlers.authentication.loginstudent;
+import org.example.handlers.authentication.loginteacher;
 import org.example.handlers.options.addOptions;
 import org.example.handlers.options.findAllOptions;
 import org.example.handlers.options.findOptionsById;
@@ -47,6 +50,8 @@ public class Routes {
 
     public static RoutingHandler exam() {
         return Handlers.routing()
+                .put("/teacher/login", new Dispatcher(new loginteacher()))
+                .put("/student/login", new Dispatcher(new loginstudent()))
                 .post("", new Dispatcher(new BlockingHandler(new addExam())))
                 .get("", new Dispatcher(new findAllExams()))
                 .get("/{examId}", new Dispatcher(new findExamsById()))
@@ -57,6 +62,7 @@ public class Routes {
 
     public static RoutingHandler reports() {
         return Handlers.routing()
+                .put("/teacher/login", new Dispatcher(new loginteacher()))
                 .get("/exams-set-teacher/{teacherId}", new Dispatcher(new exam_set_by_teacher()))
                 .get("/fetch-exam-results-for-student/{studentId}/{examId}", new Dispatcher(new fetch_Exams_Results_For_Student()))
                 .get("/top-5-student-scores/{examId}", new Dispatcher(new Top_5_Student_Scores()))
@@ -68,6 +74,7 @@ public class Routes {
 
     public static RoutingHandler classes() {
         return Handlers.routing()
+                .put("/teacher/login", new Dispatcher(new loginteacher()))
                 .post("", new Dispatcher(new BlockingHandler(new addClass())))
                 .get("", new Dispatcher(new findAllClasses()))
                 .get("/{classId}", new Dispatcher(new findClassById()))
@@ -78,6 +85,8 @@ public class Routes {
 
     public static RoutingHandler options() {
         return Handlers.routing()
+                .put("/student/login", new Dispatcher(new loginstudent()))
+                .put("/teacher/login", new Dispatcher(new loginteacher()))
                 .post("", new Dispatcher(new BlockingHandler(new addOptions())))
                 .get("", new Dispatcher(new findAllOptions()))
                 .get("/{optionId}", new Dispatcher(new findOptionsById()))
@@ -88,6 +97,8 @@ public class Routes {
 
     public static RoutingHandler questions() {
         return Handlers.routing()
+                .put("/student/login", new Dispatcher(new loginstudent()))
+                .put("/teacher/login", new Dispatcher(new loginteacher()))
                 .post("", new Dispatcher(new BlockingHandler(new addQuestions())))
                 .get("", new Dispatcher(new findAllQuestions()))
                 .get("/{questionsId}", new Dispatcher(new findQuestionsById()))
@@ -98,6 +109,8 @@ public class Routes {
 
     public static RoutingHandler responses() {
         return Handlers.routing()
+                .put("/student/login", new Dispatcher(new loginstudent()))
+                .put("/teacher/login", new Dispatcher(new loginteacher()))
                 .post("", new Dispatcher(new BlockingHandler(new addResponses())))
                 .get("", new Dispatcher(new findAllResponses()))
                 .get("/{responseId}", new Dispatcher(new findResponsesById()))
@@ -108,6 +121,8 @@ public class Routes {
 
     public static RoutingHandler student() {
         return Handlers.routing()
+                .put("/teacher/login", new Dispatcher(new loginteacher()))
+                .put("/student/login", new Dispatcher(new loginstudent()))
                 .post("", new Dispatcher(new BlockingHandler(new addStudent())))
                 .get("", new Dispatcher(new findAllSudents()))
                 .get("/{studentId}", new Dispatcher(new findStudentById()))
@@ -118,6 +133,7 @@ public class Routes {
 
     public static RoutingHandler subjects() {
         return Handlers.routing()
+                .put("/teacher/login", new Dispatcher(new loginteacher()))
                 .post("", new Dispatcher(new BlockingHandler(new addSubjects())))
                 .get("", new Dispatcher(new findAllSubjects()))
                 .get("/{subjectId}", new Dispatcher(new findSubjectsById()))
@@ -128,10 +144,26 @@ public class Routes {
 
     public static RoutingHandler teacher() {
         return Handlers.routing()
+                .put("/teacher/login", new Dispatcher(new loginteacher()))
                 .post("", new Dispatcher(new BlockingHandler(new addTeachers())))
                 .get("", new Dispatcher(new findAllTeachers()))
                 .get("/{teacherId}", new Dispatcher(new findTeachersById()))
                 .put("/{teacherId}", new Dispatcher(new BlockingHandler(new updateTeacher())))
+                .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
+                .setFallbackHandler(new Dispatcher(new FallBack()));
+    }
+
+    public static RoutingHandler login() {
+        return Handlers.routing()
+                .put("/teacher", new Dispatcher(new loginteacher()))
+                .put("/student", new Dispatcher(new loginstudent()))
+                .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
+                .setFallbackHandler(new Dispatcher(new FallBack()));
+    }
+
+    public static RoutingHandler refresh() {
+        return Handlers.routing()
+                .put("", new Dispatcher(new Refresh()))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }

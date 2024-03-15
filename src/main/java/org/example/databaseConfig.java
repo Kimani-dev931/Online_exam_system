@@ -109,56 +109,56 @@ public class databaseConfig {
             XPath xpath = xPathfactory.newXPath();
 
             // Update database-type
-            Node databaseTypeNode = (Node) xpath.compile("/database-config/database-type").evaluate(doc, XPathConstants.NODE);
+            Node databaseTypeNode = (Node) xpath.compile("/DATABASE-CONFIG/DATABASE-TYPE").evaluate(doc, XPathConstants.NODE);
             if (databaseTypeNode != null) {
                 databaseTypeNode.setTextContent(this.databaseType);
             }
 
             // Update database-name
-            Node databaseNameNode = (Node) xpath.compile("/database-config/database-name").evaluate(doc, XPathConstants.NODE);
+            Node databaseNameNode = (Node) xpath.compile("/DATABASE-CONFIG/DATABASE-NAME").evaluate(doc, XPathConstants.NODE);
             if (databaseNameNode != null) {
                 databaseNameNode.setTextContent(this.databaseName);
             }
 
             // Update database-host
-            Node databaseHostNode = (Node) xpath.compile("/database-config/database-host").evaluate(doc, XPathConstants.NODE);
+            Node databaseHostNode = (Node) xpath.compile("/DATABASE-CONFIG/DATABASE-HOST").evaluate(doc, XPathConstants.NODE);
             if (databaseHostNode != null) {
                 databaseHostNode.setTextContent(this.databaseHost);
             }
 
 
             // Update username
-            Node usernameNode = (Node) xpath.compile("/database-config/username").evaluate(doc, XPathConstants.NODE);
+            Node usernameNode = (Node) xpath.compile("/DATABASE-CONFIG/USERNAME").evaluate(doc, XPathConstants.NODE);
             if (usernameNode != null) {
                 usernameNode.setTextContent(this.username);
                 usernameNode.getAttributes().getNamedItem("ENCRYPTED").setTextContent(this.isUsernameEncrypted ? "YES" : "NO");
             }
 
             // Update password
-            Node passwordNode = (Node) xpath.compile("/database-config/password").evaluate(doc, XPathConstants.NODE);
+            Node passwordNode = (Node) xpath.compile("/DATABASE-CONFIG/PASSWORD").evaluate(doc, XPathConstants.NODE);
             if (passwordNode != null) {
                 passwordNode.setTextContent(this.password);
                 passwordNode.getAttributes().getNamedItem("ENCRYPTED").setTextContent(this.isPasswordEncrypted ? "YES" : "NO");
             }
             // Update database-host
-            Node iothreadsNode = (Node) xpath.compile("/database-config/io-threads").evaluate(doc, XPathConstants.NODE);
+            Node iothreadsNode = (Node) xpath.compile("/DATABASE-CONFIG/IO-THREADS").evaluate(doc, XPathConstants.NODE);
             if (iothreadsNode != null) {
                 iothreadsNode.setTextContent(iothreads);
             }
             // Update database-host
-            Node workerthreadsNode = (Node) xpath.compile("/database-config/worker-threads").evaluate(doc, XPathConstants.NODE);
+            Node workerthreadsNode = (Node) xpath.compile("/DATABASE-CONFIG/WORKER-THREADS").evaluate(doc, XPathConstants.NODE);
             if (workerthreadsNode != null) {
                 workerthreadsNode.setTextContent(workerthreads);
 
             }
             // Update database-host
-            Node undertowserverportNode = (Node) xpath.compile("/database-config/undertow-server-port").evaluate(doc, XPathConstants.NODE);
+            Node undertowserverportNode = (Node) xpath.compile("/DATABASE-CONFIG/UNDERTOW-SERVER-PORT").evaluate(doc, XPathConstants.NODE);
             if (undertowserverportNode != null) {
                 undertowserverportNode.setTextContent(undertowserverport);
 
             }
             // Update database-host
-            Node undertowserverhostNode = (Node) xpath.compile("/database-config/undertow-server-host").evaluate(doc, XPathConstants.NODE);
+            Node undertowserverhostNode = (Node) xpath.compile("/DATABASE-CONFIG/UNDERTOW-SERVER-HOST").evaluate(doc, XPathConstants.NODE);
             if (undertowserverhostNode!= null) {
                 undertowserverhostNode.setTextContent(this.undertowserverhost);
             }

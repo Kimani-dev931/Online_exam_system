@@ -30,7 +30,7 @@ public class Exam {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            if (e.getSQLState().startsWith("23")) { // SQL state code for integrity constraint violation, which includes duplicates
+            if (e.getSQLState().startsWith("23")) { //  duplicates
                 return new Response(409, new JSONObject().put("error", "Duplicate entry")); // 409 Conflict
             } else {
                 return new Response(500, new JSONObject().put("error", "Database error: " + e.getMessage())); // 500 Internal Server Error

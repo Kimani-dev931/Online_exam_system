@@ -42,6 +42,21 @@ public class QueryManager {
 
         return "UPDATE " + tableName + " SET " + setClause.toString() + " WHERE " + idColumn + " = " + idValue;
     }
+    public static String construct_hashmap_object_UpdateStatement(String tableName, String idColumn, int idValue, Map<String, Object> fieldValues, boolean useCurrentTimestamp) {
+        StringBuilder setClause = new StringBuilder();
+        for (String field : fieldValues.keySet()) {
+            if (setClause.length() > 0) {
+                setClause.append(", ");
+            }
+            if (useCurrentTimestamp && "date_modified".equals(field)) {
+                setClause.append(field).append(" = CURRENT_TIMESTAMP");
+            } else {
+                setClause.append(field).append(" = ?");
+            }
+        }
+
+        return "UPDATE " + tableName + " SET " + setClause.toString() + " WHERE " + idColumn + " = " + idValue;
+    }
 
 
     // Core method to execute any SQL query
@@ -162,11 +177,4 @@ public class QueryManager {
             return json;
         }
     }
-
-
-
-
-
-
-
 }

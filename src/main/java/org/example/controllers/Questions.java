@@ -87,13 +87,6 @@ public class Questions {
         }
     }
 
-    //    public static Response selectQuestions(Connection connection, String tableName, List<String> columns,
-//                                         String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset,
-//                                         List<String> joinClauses, String databaseType,Map<String, String> likeConditions) throws SQLException {
-//        Object data = QueryManager.dynamicSelect(connection, tableName, columns, whereClause, groupBy, orderBy, havingClause, limit, joinClauses, databaseType, offset,likeConditions);
-//        // Assuming the operation is always successful and returns a 200 status code
-//        return new Response(200, data);
-//    }
     public static Response selectQuestions(String tableName, List<String> columns, String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset, List<String> joinClauses, String databaseType, Map<String, String> likeConditions) {
         Connection connection = null;
         try {
