@@ -1,4 +1,4 @@
-package org.example.handlers.responses;
+package org.example.handlers.exam;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -8,14 +8,11 @@ import org.example.Response;
 import org.example.controller.Dynamic_Controller;
 import org.example.handlers.authentication.LoginStudent;
 import org.example.handlers.authentication.LoginTeacher;
-import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+public class FindExamsById implements HttpHandler {
 
-public class updateResponses implements HttpHandler {
     @Override
-    public void handleRequest(HttpServerExchange exchange) throws Exception {
+    public void handleRequest(HttpServerExchange exchange) {
 
         String token = extractToken(exchange);
 
@@ -30,31 +27,30 @@ public class updateResponses implements HttpHandler {
             return;
         }
 
-        String idValue = exchange.getQueryParameters().get("responseId").getFirst();
+        String idValue = exchange.getQueryParameters().get("examId").getFirst();
+        String whereClause = "exam_id = " + idValue;
         exchange.getRequestReceiver().receiveFullString((exchange1, message) -> {
             try {
-                JSONObject json = new JSONObject(message);
-                Map<String, String> fieldValues = jsonToMap(json);
-                Response response = Dynamic_Controller.update("Responses", "response_id", Integer.parseInt(idValue), fieldValues);
-                sendResponse(exchange, response.getStatusCode(), response.getData().toString()); // Assuming response.getData() returns a String or can be converted to String
-            } catch (NumberFormatException e) {
-                sendResponse(exchange, StatusCodes.BAD_REQUEST, "{\"error\":\"Invalid Response ID format\"}");
+                Response response = Dynamic_Controller.select( "Exam", null, whereClause, null, null, null, null, null, null, null,null);
+
+                // Assuming response.getData() returns a JSON string representation of an array
+                String responseData = response.getData().toString();
+                // Check if the response data is an empty array
+                if ("[]".equals(responseData.trim())) {
+                    sendResponse(exchange1, StatusCodes.NOT_FOUND, "{\"error\":\"examId " +idValue+ "  not found\"}");
+                } else {
+                    sendResponse(exchange1, response.getStatusCode(), responseData);
+                }
             } catch (Exception e) {
-                sendResponse(exchange, StatusCodes.INTERNAL_SERVER_ERROR, "{\"error\":\"Server error: " + e.getMessage() + "\"}");
+                sendResponse(exchange1, StatusCodes.INTERNAL_SERVER_ERROR, "{\"error\":\"Server error: " + e.getMessage() + "\"}");
             }
         });
     }
+
     private void sendResponse(HttpServerExchange exchange, int statusCode, String jsonData) {
         exchange.setStatusCode(statusCode);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(jsonData);
-    }
-    private static Map<String, String> jsonToMap(JSONObject json) {
-        Map<String, String> map = new HashMap<>();
-        json.keys().forEachRemaining(key -> {
-            map.put(key, json.getString(key));
-        });
-        return map;
     }
     private String extractToken(HttpServerExchange exchange) {
         // token is sent as a Bearer token in the Authorization in postman

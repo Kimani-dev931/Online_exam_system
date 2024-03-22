@@ -4,7 +4,7 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import org.example.Response;
-import org.example.controller.dynamic_controller;
+import org.example.controller.Dynamic_Controller;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +43,7 @@ public class Refresh implements HttpHandler {
     private int fetchUserIdFromToken(String token) {
         List<String> columns = List.of("user_id");
         String whereClause = "token = '" + token + "'";
-        Response selectResponse = dynamic_controller.select("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
+        Response selectResponse = Dynamic_Controller.select("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
         try {
             JSONObject selectData = new JSONObject(selectResponse.getData().toString());
             if (selectData.length() > 0) {
@@ -62,7 +62,7 @@ public class Refresh implements HttpHandler {
         LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(5);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         fieldValues.put("expiry_date", dtf.format(expiryDate));
-        Response updateResponse = dynamic_controller.update("userauth", "user_id", userId, fieldValues);
+        Response updateResponse = Dynamic_Controller.update("userauth", "user_id", userId, fieldValues);
         if (updateResponse.getStatusCode() != 200) {
             System.err.println("Failed to update auth details: " + updateResponse.getData().toString());
         }
@@ -96,7 +96,7 @@ public class Refresh implements HttpHandler {
             System.out.println(token);
             List<String> columns = Arrays.asList("user_id", "expiry_date");
             String whereClause = "token = '" + token + "'";
-            Response selectResponse = dynamic_controller.select("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
+            Response selectResponse = Dynamic_Controller.select("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
             System.out.println(selectResponse.getData().toString());
 
             // Ensure the response is not null and not empty

@@ -27,8 +27,8 @@ public class MainApp {
     private static String decryptedUsername;
     private static String decryptedPassword;
 
-    public static databaseConfig config = new databaseConfig();
-    private static final String SECRET_KEY = "Here is where to put your decryption secret key";
+    public static DatabaseConfig config = new DatabaseConfig();
+    private static final String SECRET_KEY = SecretKeyConfig.getSecretKey();
     public static String getConnectionString() {
         return connectionString;
     }
@@ -52,7 +52,7 @@ public class MainApp {
             XPath xpath = xPathfactory.newXPath();
 
 
-            List<databaseConfig> configs = new ArrayList<>();
+            List<DatabaseConfig> configs = new ArrayList<>();
 
 
 //            DatabaseConfig config = new DatabaseConfig();

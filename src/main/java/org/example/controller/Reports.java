@@ -31,7 +31,7 @@ public class Reports {
         String whereClause = "t.teacher_id = " + teacherId;
 
 
-        Response response = dynamic_controller.select(
+        Response response = Dynamic_Controller.select(
 
                 "Exam e",
                 columns,
@@ -67,7 +67,7 @@ public class Reports {
 
         String whereClause = "s.student_id = " + studentId + " AND q.exam_id = " + examId;
 
-        Response response =  dynamic_controller.select( "Responses r", columns, whereClause, null, null, null, null, null, joinClauses, null,null);
+        Response response =  Dynamic_Controller.select( "Responses r", columns, whereClause, null, null, null, null, null, joinClauses, null,null);
 
         if (response.getStatusCode() == 200) {
             if (response.getData() instanceof JSONArray) {
@@ -124,7 +124,7 @@ public class Reports {
             String groupBy = "s.student_id";
 
             // Fetching total scores for each student
-            Response studentScoresResponse = dynamic_controller.select( "Responses r", columns,
+            Response studentScoresResponse = Dynamic_Controller.select( "Responses r", columns,
                     whereClause, groupBy, "total_score DESC", null, 5, null, joinClauses, null,null);
 
             if (studentScoresResponse.getStatusCode() != 200) {
@@ -198,7 +198,7 @@ public class Reports {
             String groupBy = "S.student_id, S.first_name, S.last_name";
             String orderBy = "Total_Score DESC, Average_Score DESC";
 
-            Response examResponse = dynamic_controller.select( "Student S", columns, null, groupBy, orderBy, null, null, null, joinClauses, null,null);
+            Response examResponse = Dynamic_Controller.select( "Student S", columns, null, groupBy, orderBy, null, null, null, joinClauses, null,null);
 
             if (examResponse.getStatusCode() != 200) {
                 return examResponse; // Early return in case of error

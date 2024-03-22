@@ -2,7 +2,7 @@ package org.example.handlers.reports;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
-import org.example.handlers.authentication.loginteacher;
+import org.example.handlers.authentication.LoginTeacher;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -14,7 +14,7 @@ public class GenerateStudentReport implements HttpHandler{
         String token = extractToken(exchange);
 
         // Validate the token
-        if (token == null || !loginteacher.validateToken(token)) {
+        if (token == null || !LoginTeacher.validateToken(token)) {
             sendResponse(exchange, 401, "{\"error\":\"Invalid or missing token\"}");
             return;
         }

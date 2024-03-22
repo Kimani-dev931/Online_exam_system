@@ -1,4 +1,4 @@
-package org.example.handlers.responses;
+package org.example.handlers.classes;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -6,14 +6,13 @@ import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import org.example.Response;
 import org.example.controller.Dynamic_Controller;
-import org.example.handlers.authentication.LoginStudent;
 import org.example.handlers.authentication.LoginTeacher;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class updateResponses implements HttpHandler {
+public class UpdateClass implements HttpHandler {
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
 
@@ -25,20 +24,17 @@ public class updateResponses implements HttpHandler {
             return;
         }
 
-        if (token == null || !LoginStudent.validateToken(token)) {
-            sendResponse(exchange, 401, "{\"error\":\"Invalid or missing token\"}");
-            return;
-        }
 
-        String idValue = exchange.getQueryParameters().get("responseId").getFirst();
+
+        String idValue = exchange.getQueryParameters().get("classId").getFirst();
         exchange.getRequestReceiver().receiveFullString((exchange1, message) -> {
             try {
                 JSONObject json = new JSONObject(message);
                 Map<String, String> fieldValues = jsonToMap(json);
-                Response response = Dynamic_Controller.update("Responses", "response_id", Integer.parseInt(idValue), fieldValues);
+                Response response = Dynamic_Controller.update("Class", "class_id", Integer.parseInt(idValue), fieldValues);
                 sendResponse(exchange, response.getStatusCode(), response.getData().toString()); // Assuming response.getData() returns a String or can be converted to String
             } catch (NumberFormatException e) {
-                sendResponse(exchange, StatusCodes.BAD_REQUEST, "{\"error\":\"Invalid Response ID format\"}");
+                sendResponse(exchange, StatusCodes.BAD_REQUEST, "{\"error\":\"Invalid Class ID format\"}");
             } catch (Exception e) {
                 sendResponse(exchange, StatusCodes.INTERNAL_SERVER_ERROR, "{\"error\":\"Server error: " + e.getMessage() + "\"}");
             }

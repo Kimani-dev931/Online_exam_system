@@ -3,45 +3,45 @@ package org.example.rest;
 import io.undertow.Handlers;
 import io.undertow.server.RoutingHandler;
 import io.undertow.server.handlers.BlockingHandler;
-import org.example.handlers.classes.addClass;
-import org.example.handlers.classes.findAllClasses;
-import org.example.handlers.classes.findClassById;
-import org.example.handlers.classes.updateClass;
-import org.example.handlers.exam.addExam;
-import org.example.handlers.exam.findAllExams;
-import org.example.handlers.exam.findExamsById;
+import org.example.handlers.classes.AddClass;
+import org.example.handlers.classes.FindAllClasses;
+import org.example.handlers.classes.FindClassById;
+import org.example.handlers.classes.UpdateClass;
+import org.example.handlers.exam.AddExam;
+import org.example.handlers.exam.FindAllExams;
+import org.example.handlers.exam.FindExamsById;
 import org.example.handlers.authentication.Refresh;
-import org.example.handlers.authentication.loginstudent;
-import org.example.handlers.authentication.loginteacher;
-import org.example.handlers.options.addOptions;
-import org.example.handlers.options.findAllOptions;
-import org.example.handlers.options.findOptionsById;
-import org.example.handlers.options.updateOptions;
-import org.example.handlers.questions.addQuestions;
-import org.example.handlers.questions.findAllQuestions;
-import org.example.handlers.questions.findQuestionsById;
-import org.example.handlers.questions.updateQuestions;
+import org.example.handlers.authentication.LoginStudent;
+import org.example.handlers.authentication.LoginTeacher;
+import org.example.handlers.options.AddOptions;
+import org.example.handlers.options.FindAllOptions;
+import org.example.handlers.options.FindOptionsById;
+import org.example.handlers.options.UpdateOptions;
+import org.example.handlers.questions.AddQuestions;
+import org.example.handlers.questions.FindAllQuestions;
+import org.example.handlers.questions.FindQuestionsById;
+import org.example.handlers.questions.UpdateQuestions;
 import org.example.handlers.reports.GenerateStudentReport;
-import org.example.handlers.reports.exam_set_by_teacher;
-import org.example.handlers.reports.fetch_Exams_Results_For_Student;
+import org.example.handlers.reports.Exam_Set_By_Teacher;
+import org.example.handlers.reports.Fetch_Exams_Results_For_Student;
 import org.example.handlers.reports.Top_5_Student_Scores;
-import org.example.handlers.exam.updateExam;
-import org.example.handlers.responses.addResponses;
-import org.example.handlers.responses.findAllResponses;
-import org.example.handlers.responses.findResponsesById;
+import org.example.handlers.exam.UpdateExam;
+import org.example.handlers.responses.AddResponses;
+import org.example.handlers.responses.FindAllResponses;
+import org.example.handlers.responses.FindResponsesById;
 import org.example.handlers.responses.updateResponses;
-import org.example.handlers.student.addStudent;
-import org.example.handlers.student.findAllSudents;
-import org.example.handlers.student.findStudentById;
-import org.example.handlers.student.updateStudent;
-import org.example.handlers.subjects.addSubjects;
-import org.example.handlers.subjects.findAllSubjects;
-import org.example.handlers.subjects.findSubjectsById;
-import org.example.handlers.subjects.updateSubjects;
-import org.example.handlers.teacher.addTeachers;
-import org.example.handlers.teacher.findAllTeachers;
-import org.example.handlers.teacher.findTeachersById;
-import org.example.handlers.teacher.updateTeacher;
+import org.example.handlers.student.AddStudent;
+import org.example.handlers.student.FindAllSudents;
+import org.example.handlers.student.FindStudentById;
+import org.example.handlers.student.UpdateStudent;
+import org.example.handlers.subjects.AddSubjects;
+import org.example.handlers.subjects.FindAllSubjects;
+import org.example.handlers.subjects.FindSubjectsById;
+import org.example.handlers.subjects.UpdateSubjects;
+import org.example.handlers.teacher.AddTeachers;
+import org.example.handlers.teacher.FindAllTeachers;
+import org.example.handlers.teacher.FindTeachersById;
+import org.example.handlers.teacher.UpdateTeacher;
 import org.example.rest.base.Dispatcher;
 import org.example.rest.base.FallBack;
 import org.example.rest.base.InvalidMethod;
@@ -50,21 +50,21 @@ public class Routes {
 
     public static RoutingHandler exam() {
         return Handlers.routing()
-                .put("/teacher/login", new Dispatcher(new loginteacher()))
-                .put("/student/login", new Dispatcher(new loginstudent()))
-                .post("", new Dispatcher(new BlockingHandler(new addExam())))
-                .get("", new Dispatcher(new findAllExams()))
-                .get("/{examId}", new Dispatcher(new findExamsById()))
-                .put("/{examId}", new Dispatcher(new BlockingHandler(new updateExam())))
+                .put("/teacher/login", new Dispatcher(new LoginTeacher()))
+                .put("/student/login", new Dispatcher(new LoginStudent()))
+                .post("", new Dispatcher(new BlockingHandler(new AddExam())))
+                .get("", new Dispatcher(new FindAllExams()))
+                .get("/{examId}", new Dispatcher(new FindExamsById()))
+                .put("/{examId}", new Dispatcher(new BlockingHandler(new UpdateExam())))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
 
     public static RoutingHandler reports() {
         return Handlers.routing()
-                .put("/teacher/login", new Dispatcher(new loginteacher()))
-                .get("/exams-set-teacher/{teacherId}", new Dispatcher(new exam_set_by_teacher()))
-                .get("/fetch-exam-results-for-student/{studentId}/{examId}", new Dispatcher(new fetch_Exams_Results_For_Student()))
+                .put("/teacher/login", new Dispatcher(new LoginTeacher()))
+                .get("/exams-set-teacher/{teacherId}", new Dispatcher(new Exam_Set_By_Teacher()))
+                .get("/fetch-exam-results-for-student/{studentId}/{examId}", new Dispatcher(new Fetch_Exams_Results_For_Student()))
                 .get("/top-5-student-scores/{examId}", new Dispatcher(new Top_5_Student_Scores()))
                 .get("/student-report", new Dispatcher(new GenerateStudentReport()))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
@@ -74,46 +74,46 @@ public class Routes {
 
     public static RoutingHandler classes() {
         return Handlers.routing()
-                .put("/teacher/login", new Dispatcher(new loginteacher()))
-                .post("", new Dispatcher(new BlockingHandler(new addClass())))
-                .get("", new Dispatcher(new findAllClasses()))
-                .get("/{classId}", new Dispatcher(new findClassById()))
-                .put("/{classId}", new Dispatcher(new BlockingHandler(new updateClass())))
+                .put("/teacher/login", new Dispatcher(new LoginTeacher()))
+                .post("", new Dispatcher(new BlockingHandler(new AddClass())))
+                .get("", new Dispatcher(new FindAllClasses()))
+                .get("/{classId}", new Dispatcher(new FindClassById()))
+                .put("/{classId}", new Dispatcher(new BlockingHandler(new UpdateClass())))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
 
     public static RoutingHandler options() {
         return Handlers.routing()
-                .put("/student/login", new Dispatcher(new loginstudent()))
-                .put("/teacher/login", new Dispatcher(new loginteacher()))
-                .post("", new Dispatcher(new BlockingHandler(new addOptions())))
-                .get("", new Dispatcher(new findAllOptions()))
-                .get("/{optionId}", new Dispatcher(new findOptionsById()))
-                .put("/{optionId}", new Dispatcher(new BlockingHandler(new updateOptions())))
+                .put("/student/login", new Dispatcher(new LoginStudent()))
+                .put("/teacher/login", new Dispatcher(new LoginTeacher()))
+                .post("", new Dispatcher(new BlockingHandler(new AddOptions())))
+                .get("", new Dispatcher(new FindAllOptions()))
+                .get("/{optionId}", new Dispatcher(new FindOptionsById()))
+                .put("/{optionId}", new Dispatcher(new BlockingHandler(new UpdateOptions())))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
 
     public static RoutingHandler questions() {
         return Handlers.routing()
-                .put("/student/login", new Dispatcher(new loginstudent()))
-                .put("/teacher/login", new Dispatcher(new loginteacher()))
-                .post("", new Dispatcher(new BlockingHandler(new addQuestions())))
-                .get("", new Dispatcher(new findAllQuestions()))
-                .get("/{questionsId}", new Dispatcher(new findQuestionsById()))
-                .put("/{questionsId}", new Dispatcher(new BlockingHandler(new updateQuestions())))
+                .put("/student/login", new Dispatcher(new LoginStudent()))
+                .put("/teacher/login", new Dispatcher(new LoginTeacher()))
+                .post("", new Dispatcher(new BlockingHandler(new AddQuestions())))
+                .get("", new Dispatcher(new FindAllQuestions()))
+                .get("/{questionsId}", new Dispatcher(new FindQuestionsById()))
+                .put("/{questionsId}", new Dispatcher(new BlockingHandler(new UpdateQuestions())))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
 
     public static RoutingHandler responses() {
         return Handlers.routing()
-                .put("/student/login", new Dispatcher(new loginstudent()))
-                .put("/teacher/login", new Dispatcher(new loginteacher()))
-                .post("", new Dispatcher(new BlockingHandler(new addResponses())))
-                .get("", new Dispatcher(new findAllResponses()))
-                .get("/{responseId}", new Dispatcher(new findResponsesById()))
+                .put("/student/login", new Dispatcher(new LoginStudent()))
+                .put("/teacher/login", new Dispatcher(new LoginTeacher()))
+                .post("", new Dispatcher(new BlockingHandler(new AddResponses())))
+                .get("", new Dispatcher(new FindAllResponses()))
+                .get("/{responseId}", new Dispatcher(new FindResponsesById()))
                 .put("/{responseId}", new Dispatcher(new BlockingHandler(new updateResponses())))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
@@ -121,42 +121,42 @@ public class Routes {
 
     public static RoutingHandler student() {
         return Handlers.routing()
-                .put("/teacher/login", new Dispatcher(new loginteacher()))
-                .put("/student/login", new Dispatcher(new loginstudent()))
-                .post("", new Dispatcher(new BlockingHandler(new addStudent())))
-                .get("", new Dispatcher(new findAllSudents()))
-                .get("/{studentId}", new Dispatcher(new findStudentById()))
-                .put("/{studentId}", new Dispatcher(new BlockingHandler(new updateStudent())))
+                .put("/teacher/login", new Dispatcher(new LoginTeacher()))
+                .put("/student/login", new Dispatcher(new LoginStudent()))
+                .post("", new Dispatcher(new BlockingHandler(new AddStudent())))
+                .get("", new Dispatcher(new FindAllSudents()))
+                .get("/{studentId}", new Dispatcher(new FindStudentById()))
+                .put("/{studentId}", new Dispatcher(new BlockingHandler(new UpdateStudent())))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
 
     public static RoutingHandler subjects() {
         return Handlers.routing()
-                .put("/teacher/login", new Dispatcher(new loginteacher()))
-                .post("", new Dispatcher(new BlockingHandler(new addSubjects())))
-                .get("", new Dispatcher(new findAllSubjects()))
-                .get("/{subjectId}", new Dispatcher(new findSubjectsById()))
-                .put("/{subjectId}", new Dispatcher(new BlockingHandler(new updateSubjects())))
+                .put("/teacher/login", new Dispatcher(new LoginTeacher()))
+                .post("", new Dispatcher(new BlockingHandler(new AddSubjects())))
+                .get("", new Dispatcher(new FindAllSubjects()))
+                .get("/{subjectId}", new Dispatcher(new FindSubjectsById()))
+                .put("/{subjectId}", new Dispatcher(new BlockingHandler(new UpdateSubjects())))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
 
     public static RoutingHandler teacher() {
         return Handlers.routing()
-                .put("/teacher/login", new Dispatcher(new loginteacher()))
-                .post("", new Dispatcher(new BlockingHandler(new addTeachers())))
-                .get("", new Dispatcher(new findAllTeachers()))
-                .get("/{teacherId}", new Dispatcher(new findTeachersById()))
-                .put("/{teacherId}", new Dispatcher(new BlockingHandler(new updateTeacher())))
+                .put("/teacher/login", new Dispatcher(new LoginTeacher()))
+                .post("", new Dispatcher(new BlockingHandler(new AddTeachers())))
+                .get("", new Dispatcher(new FindAllTeachers()))
+                .get("/{teacherId}", new Dispatcher(new FindTeachersById()))
+                .put("/{teacherId}", new Dispatcher(new BlockingHandler(new UpdateTeacher())))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }
 
     public static RoutingHandler login() {
         return Handlers.routing()
-                .put("/teacher", new Dispatcher(new loginteacher()))
-                .put("/student", new Dispatcher(new loginstudent()))
+                .put("/teacher", new Dispatcher(new LoginTeacher()))
+                .put("/student", new Dispatcher(new LoginStudent()))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }

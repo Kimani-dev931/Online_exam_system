@@ -10,7 +10,8 @@ import org.example.handlers.authentication.LoginTeacher;
 
 import static org.example.MainApp.connection;
 
-public class Top_5_Student_Scores implements HttpHandler {
+
+public class Exam_Set_By_Teacher implements HttpHandler {
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
 
@@ -22,13 +23,13 @@ public class Top_5_Student_Scores implements HttpHandler {
             return;
         }
 
-        String examId = exchange.getQueryParameters().get("examId").getFirst();
+        String teacherId = exchange.getQueryParameters().get("teacherId").getFirst();
         try {
-            Response response = Reports.fetch_Student_Scores_For_Exam(connection,Integer.parseInt(examId));
+            Response response = Reports.exams_set_by_a_Teacher(connection, Integer.parseInt(teacherId));
             sendResponse(exchange, response.getStatusCode(), response.getData().toString()); // Assuming response.getData() returns a String or can be converted to String
         }
         catch (NumberFormatException e) {
-            sendResponse(exchange, StatusCodes.BAD_REQUEST, "{\"error\":\"Invalid exam ID format\"}");
+            sendResponse(exchange, StatusCodes.BAD_REQUEST, "{\"error\":\"Invalid teacher ID format\"}");
         }
         catch (Exception e) {
             sendResponse(exchange, StatusCodes.INTERNAL_SERVER_ERROR, "{\"error\":\"Server error: " + e.getMessage() + "\"}");
@@ -40,7 +41,6 @@ public class Top_5_Student_Scores implements HttpHandler {
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(jsonData);
     }
-
     private String extractToken(HttpServerExchange exchange) {
         // token is sent as a Bearer token in the Authorization in postman
         String authorizationHeader = exchange.getRequestHeaders().getFirst("Authorization");
