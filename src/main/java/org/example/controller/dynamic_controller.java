@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.controller;
 
 import org.example.QueryManager;
 import org.example.Response;
@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class userauth {
-    public static Response insertuserauth(String tableName, Map<String, String> fieldValues) {
+public class  dynamic_controller{
+    public static Response add(String tableName, Map<String, String> fieldValues) {
         Connection connection = null;
         try {
             connection = database_connection.getConnection();
@@ -27,7 +27,7 @@ public class userauth {
 
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Creating user failed, no rows affected.");
+                throw new SQLException("Creating" +tableName+ "failed, no rows affected.");
             }
             JSONObject jsonData = new JSONObject(fieldValues);
             return new Response(201, jsonData); // 201 Created
@@ -39,7 +39,8 @@ public class userauth {
             } else {
                 return new Response(500, new JSONObject().put("error", "Database error: " + e.getMessage())); // 500 Internal Server Error
             }
-        }finally {
+        }
+        finally {
             if (connection != null) {
                 try {
                     connection.close();
@@ -51,7 +52,7 @@ public class userauth {
     }
 
 
-    public static Response updateuserauth(String tableName, String idColumn, int idValue, Map<String, String> fieldValues) {
+    public static Response update(String tableName, String idColumn, int idValue, Map<String, String> fieldValues) {
         Connection connection = null;
         try {
             connection = database_connection.getConnection();
@@ -78,7 +79,8 @@ public class userauth {
         } catch (SQLException e) {
             e.printStackTrace();
             return new Response(500); // Internal server error
-        }finally {
+        }
+        finally {
             if (connection != null) {
                 try {
                     connection.close();
@@ -89,7 +91,7 @@ public class userauth {
         }
     }
 
-    public static Response updateObjectuserauth(String tableName, String idColumn, int idValue, Map<String, Object> fieldValues) {
+    public static Response object_update(String tableName, String idColumn, int idValue, Map<String, Object> fieldValues) {
         Connection connection = null;
         try {
             connection = database_connection.getConnection();
@@ -109,14 +111,16 @@ public class userauth {
 
             if (affectedRows > 0) {
                 JSONObject jsonData = new JSONObject(fieldValues);
-                return new Response(200, jsonData); // Assuming successful update
+                return new Response(200, jsonData);
             } else {
-                return new Response(204, new HashMap<>()); // No content updated
+                return new Response(204, new HashMap<>());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return new Response(500); // Internal server error
-        }finally {
+            // Internal server error
+            return new Response(500);
+        }
+        finally {
             if (connection != null) {
                 try {
                     connection.close();
@@ -129,7 +133,7 @@ public class userauth {
 
 
 
-    public static Response selectauth(String tableName, List<String> columns, String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset, List<String> joinClauses, String databaseType, Map<String, String> likeConditions) {
+    public static Response select(String tableName, List<String> columns, String whereClause, String groupBy, String orderBy, String havingClause, Integer limit, Integer offset, List<String> joinClauses, String databaseType, Map<String, String> likeConditions) {
         Connection connection = null;
         try {
             connection = database_connection.getConnection();
@@ -138,7 +142,8 @@ public class userauth {
         } catch (SQLException e) {
             e.printStackTrace();
             return new Response(500); // Internal server error
-        } finally {
+        }
+        finally {
             if (connection != null) {
                 try {
                     connection.close();

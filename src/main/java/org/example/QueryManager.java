@@ -65,6 +65,7 @@ public class QueryManager {
                                           List<String> joinClauses, String databaseType, Integer offset,Map<String, String> likeConditions) throws SQLException {
         StringBuilder query = new StringBuilder("SELECT ");
 
+
         // Columns
         if (columns == null || columns.isEmpty()) {
             query.append("*");
@@ -107,6 +108,7 @@ public class QueryManager {
         if (groupBy != null && !groupBy.isEmpty()) {
             query.append(" GROUP BY ").append(groupBy);
         }
+
 
         // Having clause
         if (havingClause != null && !havingClause.isEmpty()) {

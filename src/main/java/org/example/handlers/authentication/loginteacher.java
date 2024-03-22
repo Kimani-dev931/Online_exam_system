@@ -6,17 +6,15 @@ import io.undertow.server.handlers.form.FormData;
 import io.undertow.server.handlers.form.FormDataParser;
 import io.undertow.server.handlers.form.FormParserFactory;
 import io.undertow.util.Headers;
-import org.example.controllers.Teacher;
 import org.example.Response;
-import org.example.controllers.userauth;
+import org.example.controller.dynamic_controller;
+
 import org.json.JSONObject;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static org.example.controllers.userauth.selectauth;
 
 public class loginteacher implements HttpHandler {
 
@@ -43,7 +41,7 @@ public class loginteacher implements HttpHandler {
     private Response authenticateTeacher(String username, String password) {
         try {
             String whereClause = "username = '" + username + "'";
-            Response selectResponse = Teacher.selectTeacher("Teacher", java.util.Arrays.asList("teacher_id", "password"), whereClause, null, null, null, null, null, null, null, null);
+            Response selectResponse = dynamic_controller.select("Teacher", java.util.Arrays.asList("teacher_id", "password"), whereClause, null, null, null, null, null, null, null, null);
 
             JSONObject responseData = new JSONObject(selectResponse.getData().toString());
             if (responseData.length() == 0) {
@@ -82,7 +80,7 @@ public class loginteacher implements HttpHandler {
         // Fetch the current number of login attempts
         List<String> columns = List.of("login_attempts", "locked");
         String whereClause = "user_id = " + teacherId + " AND user_type = 'teacher'";
-        Response selectResponse = userauth.selectauth("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
+        Response selectResponse = dynamic_controller.select("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
 
         try {
             JSONObject selectData = new JSONObject(selectResponse.getData().toString());
@@ -101,7 +99,7 @@ public class loginteacher implements HttpHandler {
                 updateFields.put("locked", newIsLocked ? 1 : 0);
 
 
-                Response updateResponse = userauth.updateObjectuserauth("userauth", "user_id", teacherId, updateFields);
+                Response updateResponse = dynamic_controller.object_update("userauth", "user_id", teacherId, updateFields);
 
                 if (updateResponse.getStatusCode() != 200) {
                     System.err.println("Failed to update login attempts: " + updateResponse.getData().toString());
@@ -149,7 +147,7 @@ public class loginteacher implements HttpHandler {
     private Response checkLockStatus(int teacherId) {
         List<String> columns = List.of("locked");
         String whereClause = "user_id = " + teacherId + " AND user_type = 'teacher'";
-        Response selectResponse = userauth.selectauth("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
+        Response selectResponse = dynamic_controller.select("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
 
         String responseDataStr = selectResponse.getData().toString().trim();
 
@@ -186,7 +184,7 @@ public class loginteacher implements HttpHandler {
         fieldValues.put("login_attempts", "0");
 
 
-        Response updateResponse = userauth.updateuserauth("userauth", "user_id", teacherId, fieldValues);
+        Response updateResponse = dynamic_controller.update("userauth", "user_id", teacherId, fieldValues);
 
         if (updateResponse.getStatusCode() == 200) {
 
@@ -209,7 +207,7 @@ public class loginteacher implements HttpHandler {
     private String generateToken(int teacherId) {
         long timestamp = Instant.now().getEpochSecond();
         // 5 minutes from now
-        long expiryTime = timestamp + (5 * 60);
+        long expiryTime = timestamp + (10 * 60);
 
         String tokenRaw = teacherId + ":" + expiryTime + ":" + Math.random();
         String token = Base64.getEncoder().encodeToString(tokenRaw.getBytes());
@@ -230,12 +228,12 @@ public class loginteacher implements HttpHandler {
         Response response;
 
         String whereClause = "user_id = " + teacherId + " AND user_type = 'teacher'";
-        Response selectResponse = userauth.selectauth("userauth", java.util.Arrays.asList("*"), whereClause, null, null, null, null, null, null, "MySQL", null);
+        Response selectResponse = dynamic_controller.select("userauth", java.util.Arrays.asList("*"), whereClause, null, null, null, null, null, null, "MySQL", null);
 
         if (selectResponse.getData().toString().equals("[]")) {
-            response = userauth.insertuserauth("userauth", fieldValues);
+            response = dynamic_controller.add("userauth", fieldValues);
         } else {
-            response = userauth.updateuserauth("userauth", "user_id", teacherId, fieldValues);
+            response = dynamic_controller.update("userauth", "user_id", teacherId, fieldValues);
         }
 
         if (response.getStatusCode() != 200 && response.getStatusCode() != 201) {
@@ -254,7 +252,7 @@ public class loginteacher implements HttpHandler {
             String whereClause = "token = '" + token + "'";
 
 
-            Response selectResponse = selectauth("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
+            Response selectResponse = dynamic_controller.select("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
             System.out.println(selectResponse.getData().toString());
 
             JSONObject responseData = new JSONObject(selectResponse.getData().toString());

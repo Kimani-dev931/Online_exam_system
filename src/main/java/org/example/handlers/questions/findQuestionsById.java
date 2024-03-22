@@ -4,8 +4,8 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
-import org.example.controllers.Questions;
 import org.example.Response;
+import org.example.controller.dynamic_controller;
 import org.example.handlers.authentication.loginstudent;
 import org.example.handlers.authentication.loginteacher;
 
@@ -31,7 +31,7 @@ public class findQuestionsById implements HttpHandler {
         String whereClause = "questions_id = " + idValue;
         exchange.getRequestReceiver().receiveFullString((exchange1, message) -> {
             try {
-                Response response = Questions.selectQuestions( "Questions", null, whereClause, null, null, null, null, null, null, null,null);
+                Response response = dynamic_controller.select( "Questions", null, whereClause, null, null, null, null, null, null, null,null);
 
                 // Assuming response.getData() returns a JSON string representation of an array
                 String responseData = response.getData().toString();

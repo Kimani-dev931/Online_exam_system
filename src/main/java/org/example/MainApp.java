@@ -28,7 +28,7 @@ public class MainApp {
     private static String decryptedPassword;
 
     public static databaseConfig config = new databaseConfig();
-    private static final String SECRET_KEY = "beadc627d00ec777340bf6f06ece360fe1762e8b4408504516afd194dc303c77";
+    private static final String SECRET_KEY = "Here is where to put your decryption secret key";
     public static String getConnectionString() {
         return connectionString;
     }

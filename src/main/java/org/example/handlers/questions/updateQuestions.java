@@ -4,8 +4,8 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
-import org.example.controllers.Questions;
 import org.example.Response;
+import org.example.controller.dynamic_controller;
 import org.example.handlers.authentication.loginteacher;
 import org.json.JSONObject;
 
@@ -29,7 +29,7 @@ public class updateQuestions implements HttpHandler {
             try {
                 JSONObject json = new JSONObject(message);
                 Map<String, String> fieldValues = jsonToMap(json);
-                Response response = Questions.updateQuestions("Questions", "questions_id", Integer.parseInt(idValue), fieldValues);
+                Response response = dynamic_controller.update("Questions", "questions_id", Integer.parseInt(idValue), fieldValues);
                 sendResponse(exchange, response.getStatusCode(), response.getData().toString()); // Assuming response.getData() returns a String or can be converted to String
             } catch (NumberFormatException e) {
                 sendResponse(exchange, StatusCodes.BAD_REQUEST, "{\"error\":\"Invalid Question ID format\"}");

@@ -7,8 +7,8 @@ import io.undertow.server.handlers.form.FormDataParser;
 import io.undertow.server.handlers.form.FormParserFactory;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
-import org.example.controllers.Student;
 import org.example.Response;
+import org.example.controller.dynamic_controller;
 import org.example.handlers.authentication.loginteacher;
 import org.json.JSONObject;
 
@@ -72,7 +72,7 @@ public class addStudent implements HttpHandler {
 
     private void performDatabaseOperation(HttpServerExchange exchange, Map<String, String> fieldValues) {
         try {
-            Response response = Student.insertstudent("Student", fieldValues);
+            Response response = dynamic_controller.add("Student", fieldValues);
 
             // Check if the response is null
             if (response == null) {

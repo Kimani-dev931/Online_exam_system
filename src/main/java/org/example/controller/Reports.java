@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.controller;
 
 import org.example.Response;
 import org.json.JSONArray;
@@ -31,7 +31,7 @@ public class Reports {
         String whereClause = "t.teacher_id = " + teacherId;
 
 
-        Response response = Student.selectStudent(
+        Response response = dynamic_controller.select(
 
                 "Exam e",
                 columns,
@@ -44,6 +44,7 @@ public class Reports {
                 joinClauses,
                 null,
                 null
+
         );
 
 
@@ -66,7 +67,7 @@ public class Reports {
 
         String whereClause = "s.student_id = " + studentId + " AND q.exam_id = " + examId;
 
-        Response response =  Exam.selectExam( "Responses r", columns, whereClause, null, null, null, null, null, joinClauses, null,null);
+        Response response =  dynamic_controller.select( "Responses r", columns, whereClause, null, null, null, null, null, joinClauses, null,null);
 
         if (response.getStatusCode() == 200) {
             if (response.getData() instanceof JSONArray) {
@@ -88,8 +89,7 @@ public class Reports {
                     row.put("percentage_score", percentageScore);
                     processedResults.put(row);
 
-                    // Assuming you want to calculate the percentage of correct answers
-                    // Here, we're just marking each question as fully correct or not
+
 
                 }
 
@@ -124,7 +124,7 @@ public class Reports {
             String groupBy = "s.student_id";
 
             // Fetching total scores for each student
-            Response studentScoresResponse = Exam.selectExam( "Responses r", columns,
+            Response studentScoresResponse = dynamic_controller.select( "Responses r", columns,
                     whereClause, groupBy, "total_score DESC", null, 5, null, joinClauses, null,null);
 
             if (studentScoresResponse.getStatusCode() != 200) {
@@ -198,7 +198,7 @@ public class Reports {
             String groupBy = "S.student_id, S.first_name, S.last_name";
             String orderBy = "Total_Score DESC, Average_Score DESC";
 
-            Response examResponse = Exam.selectExam( "Student S", columns, null, groupBy, orderBy, null, null, null, joinClauses, null,null);
+            Response examResponse = dynamic_controller.select( "Student S", columns, null, groupBy, orderBy, null, null, null, joinClauses, null,null);
 
             if (examResponse.getStatusCode() != 200) {
                 return examResponse; // Early return in case of error
