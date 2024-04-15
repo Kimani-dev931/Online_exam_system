@@ -54,7 +54,6 @@ public class AddClass implements HttpHandler {
                         for (String fieldName : formData) {
                             FormData.FormValue formValue = formData.getFirst(fieldName);
                             if (!formValue.isFile()) {
-                                // Regular form field
                                 fieldValues.put(fieldName, formValue.getValue());
                             }
 
@@ -79,7 +78,7 @@ public class AddClass implements HttpHandler {
             if (response == null) {
                 // Handle the null response scenario, possibly as an internal server error
                 sendResponse(exchange, StatusCodes.INTERNAL_SERVER_ERROR, "{\"error\":\"Database operation failed\"}");
-                return; // Stop further processing
+                return;
             }
 
             sendResponse(exchange, response.getStatusCode(), response.getData().toString());

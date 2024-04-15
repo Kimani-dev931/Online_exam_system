@@ -3,6 +3,7 @@ package org.example.rest;
 import io.undertow.Handlers;
 import io.undertow.server.RoutingHandler;
 import io.undertow.server.handlers.BlockingHandler;
+import org.example.handlers.authentication.ChangePassword;
 import org.example.handlers.classes.AddClass;
 import org.example.handlers.classes.FindAllClasses;
 import org.example.handlers.classes.FindClassById;
@@ -157,6 +158,13 @@ public class Routes {
         return Handlers.routing()
                 .put("/teacher", new Dispatcher(new LoginTeacher()))
                 .put("/student", new Dispatcher(new LoginStudent()))
+                .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
+                .setFallbackHandler(new Dispatcher(new FallBack()));
+    }
+
+    public static RoutingHandler changepassword() {
+        return Handlers.routing()
+                .put("", new Dispatcher(new ChangePassword()))
                 .setInvalidMethodHandler(new Dispatcher(new InvalidMethod()))
                 .setFallbackHandler(new Dispatcher(new FallBack()));
     }

@@ -119,7 +119,6 @@ public class FindAllSudents implements HttpHandler {
                     List<String> column=Arrays.asList("count(*)");
 
                     Response countResponse = Dynamic_Controller.select("Student",column , whereClause, null, null, null,null, null, null, null, null);
-                    // Extract the count value from the response
                     JsonNode countNode = new ObjectMapper().readTree(countResponse.getData().toString());
                     int totalRecords = countNode.get("count(*)").asInt();
                     if ("[]".equals(response.getData().toString().trim())) {

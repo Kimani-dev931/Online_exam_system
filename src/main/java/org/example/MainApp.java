@@ -6,6 +6,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.example.handlers.authentication.LoginTeacher;
 import org.example.rest.RestAPIServer;
 import org.w3c.dom.Document;
 
@@ -139,9 +140,26 @@ public class MainApp {
             decryptedUsername = config.isUsernameEncrypted() ? decrypt(config.getUsername(), SECRET_KEY) : config.getUsername();
             decryptedPassword = config.isPasswordEncrypted() ? decrypt(config.getPassword(), SECRET_KEY) : config.getPassword();
 
-//            connection = DriverManager.getConnection(connectionString, decryptedUsername, decryptedPassword);
-
             RestAPIServer.start();
+
+
+//            String filterString = "first_name:lm:A";
+//            String whereClause = Filter.generateWhereClause(filterString);
+//            System.out.println(whereClause);
+
+//            int teacherId = 2;
+//
+//            // Call the resetAccountLock method with the teacherId
+//            Response response = LoginTeacher.resetAccountLock(teacherId);
+//
+//            // Check the response and print a message to the console
+//            if (response.getStatusCode() == 200) {
+//                System.out.println("Account unlocked successfully.");
+//            } else {
+//                System.out.println("Failed to unlock account.");
+//            }
+
+
 
 
 

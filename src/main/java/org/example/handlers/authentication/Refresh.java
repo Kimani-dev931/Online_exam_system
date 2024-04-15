@@ -32,10 +32,12 @@ public class Refresh implements HttpHandler {
 
 
         String newToken = generateToken(userId);
-
-        updateUserAuthToken(userId, newToken);
+        LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(5);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        updateUserAuthToken(userId, newToken,dtf.format(expiryDate));
 
         JSONObject responseJson = new JSONObject();
+        responseJson.put("expiry Date", expiryDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         responseJson.put("Refreshed Token Is", newToken);
         sendResponse(exchange, 200, responseJson.toString());
     }
@@ -55,41 +57,16 @@ public class Refresh implements HttpHandler {
         }
         return -1;
     }
-    private void updateUserAuthToken(int userId, String newToken) {
+    private void updateUserAuthToken(int userId, String newToken ,String expiryDate) {
 
         Map<String, String> fieldValues = new HashMap<>();
         fieldValues.put("token", newToken);
-        LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(5);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        fieldValues.put("expiry_date", dtf.format(expiryDate));
+        fieldValues.put("expiry_date",expiryDate );
         Response updateResponse = Dynamic_Controller.update("userauth", "user_id", userId, fieldValues);
         if (updateResponse.getStatusCode() != 200) {
             System.err.println("Failed to update auth details: " + updateResponse.getData().toString());
         }
     }
-//    public static boolean validateToken(String token) {
-//        try {
-//            System.out.println(token);
-//            List<String> columns = Arrays.asList("user_id","expiry_date");
-//            String whereClause = "token = '" + token + "'";
-//            Response selectResponse = dynamic_controller.select("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
-//            System.out.println(selectResponse.getData().toString());
-//            JSONObject responseData = new JSONObject(selectResponse.getData().toString());
-//            if (responseData.length() > 0) {
-//
-//                LocalDateTime expiryDate = LocalDateTime.parse(responseData.getString("expiry_date"), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-//
-//                if (expiryDate.isAfter(LocalDateTime.now())) {
-//
-//                    return true;
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//
-//        }
-//        return false;
-//    }
 
     public static boolean validateToken(String token) {
         try {
@@ -97,9 +74,9 @@ public class Refresh implements HttpHandler {
             List<String> columns = Arrays.asList("user_id", "expiry_date");
             String whereClause = "token = '" + token + "'";
             Response selectResponse = Dynamic_Controller.select("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
-            System.out.println(selectResponse.getData().toString());
+            System.out.println("refresh token:"+selectResponse.getData().toString());
 
-            // Ensure the response is not null and not empty
+
             if (selectResponse.getData() == null || selectResponse.getData().toString().trim().isEmpty()) {
                 System.out.println("Response data is null or empty.");
                 return false;
@@ -114,10 +91,10 @@ public class Refresh implements HttpHandler {
             }
         } catch (JSONException e) {
             System.out.println("JSON parsing error: " + e.getMessage());
-            // Handle JSON specific parsing errors here
+
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle other exceptions
+
         }
         return false;
     }

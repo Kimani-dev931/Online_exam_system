@@ -6,6 +6,7 @@ import io.undertow.server.handlers.form.FormData;
 import io.undertow.server.handlers.form.FormDataParser;
 import io.undertow.server.handlers.form.FormParserFactory;
 import io.undertow.util.Headers;
+import io.undertow.util.HttpString;
 import org.example.Response;
 import org.example.controller.Dynamic_Controller;
 
@@ -17,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class LoginTeacher implements HttpHandler {
-
+    private static int authenticatedTeacherId;
     @Override
     public void handleRequest(final HttpServerExchange exchange) throws Exception {
         exchange.startBlocking();
@@ -41,34 +42,39 @@ public class LoginTeacher implements HttpHandler {
     private Response authenticateTeacher(String username, String password) {
         try {
             String whereClause = "username = '" + username + "'";
-            Response selectResponse = Dynamic_Controller.select("Teacher", java.util.Arrays.asList("teacher_id", "password"), whereClause, null, null, null, null, null, null, null, null);
 
-            JSONObject responseData = new JSONObject(selectResponse.getData().toString());
-            if (responseData.length() == 0) {
-                return new Response(404, new JSONObject().put("error", "User not found"));
+            Response selectResponse = Dynamic_Controller.select("Teacher", java.util.Arrays.asList("teacher_id", "password"), whereClause, null, null, null, null, null, null, null, null);
+            if (selectResponse.getData().toString().equals("[]")) {
+                return new Response(404, new JSONObject().put("error", "Invalid username"));
             }
 
+            JSONObject responseData = new JSONObject(selectResponse.getData().toString());
+
             int teacherId = responseData.getInt("teacher_id");
+            authenticatedTeacherId = responseData.getInt("teacher_id");
             Response lockStatusResponse = checkLockStatus(teacherId);
             if (lockStatusResponse != null) {
-                // return response immediately without checking the password.
+
                 return lockStatusResponse;
             }
             String storedPassword = responseData.getString("password");
 
             if (password.equals(storedPassword)) {
                 String token = generateToken(teacherId);
+                LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(2);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-                storeAuthDetails(teacherId, token);
+                storeAuthDetails(teacherId, token,dtf.format(expiryDate));
 
                 JSONObject jsonData = new JSONObject();
                 jsonData.put("token", token);
-                jsonData.put("message", "Hello " + username + ", you just logged in successfully.");
+                jsonData.put("expiry_time", expiryDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                jsonData.put("message","you just logged in successfully.");
                 return new Response(200, jsonData);
             } else {
-                // Password does not match, increment login attempts
+                // if Password does not match, increment login attempts
                 incrementLoginAttempts(teacherId);
-                return new Response(403, new JSONObject().put("error", "Authentication failed, invalid password or username"));
+                return new Response(403, new JSONObject().put("error", "Authentication failed, invalid password"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,7 +83,7 @@ public class LoginTeacher implements HttpHandler {
     }
 
     public void incrementLoginAttempts(int teacherId) {
-        // Fetch the current number of login attempts
+
         List<String> columns = List.of("login_attempts", "locked");
         String whereClause = "user_id = " + teacherId + " AND user_type = 'teacher'";
         Response selectResponse = Dynamic_Controller.select("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
@@ -87,12 +93,12 @@ public class LoginTeacher implements HttpHandler {
             if (selectData.length() > 0) {
                 int currentAttempts = selectData.getInt("login_attempts");
                 boolean isLocked = selectData.getBoolean("locked");
-                // Increment login attempts
-                int newAttempts = currentAttempts + 1;
-                // Check if account should be locked
-                boolean newIsLocked = newAttempts >= 3 || isLocked;
 
-                // Prepare update hashmap
+                int newAttempts = currentAttempts + 1;
+
+                boolean newIsLocked = newAttempts >= 8 || isLocked;
+
+
                 Map<String, Object> updateFields = new HashMap<>();
                 updateFields.put("login_attempts", Integer.toString(newAttempts));
 
@@ -114,35 +120,6 @@ public class LoginTeacher implements HttpHandler {
         }
     }
 
-//    private Response checkLockStatus(int teacherId) {
-//        // Fetch the locked status
-//        List<String> columns = List.of("locked");
-//        String whereClause = "user_id = " + teacherId + " AND user_type = 'teacher'";
-//        Response selectResponse = userauth.selectauth("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
-//
-//        try {
-//            JSONObject selectData = new JSONObject(selectResponse.getData().toString());
-//            if (selectData.length() > 0) {
-//                boolean isLocked = selectData.getBoolean("locked");
-//
-//                if (isLocked) {
-//                    // Account is locked
-//                    return new Response(403, new JSONObject().put("error", "Your account is locked. Please consult the admin."));
-//                } else {
-//                    // Account is not locked, proceed with authentication
-//                    return null;
-//                }
-//            } else {
-
-//                return null;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-
-//            return new Response(500, new JSONObject().put("error", "Server error: " + e.getMessage()));
-//        }
-//    }
-
 
     private Response checkLockStatus(int teacherId) {
         List<String> columns = List.of("locked");
@@ -151,16 +128,16 @@ public class LoginTeacher implements HttpHandler {
 
         String responseDataStr = selectResponse.getData().toString().trim();
 
-        // Check if the response is an empty array or not JSON formatted data
+
         if ("[]".equals(responseDataStr) || (!responseDataStr.startsWith("{") && !responseDataStr.startsWith("["))) {
-            // No record found or bad format, proceed with authentication
+
             return null;
         }
 
         try {
             JSONObject selectData = new JSONObject(responseDataStr);
 
-            boolean isLocked = selectData.optBoolean("locked", false); // default to false if not found
+            boolean isLocked = selectData.optBoolean("locked", false);
 
             if (isLocked) {
                 // Account is locked
@@ -176,11 +153,10 @@ public class LoginTeacher implements HttpHandler {
     }
 
     public static Response resetAccountLock(int teacherId) {
-        // Prepare the fields to be updated
-        Map<String, String> fieldValues = new HashMap<>();
-        // Reset the lock status
-        fieldValues.put("locked", "0");
 
+        Map<String, String> fieldValues = new HashMap<>();
+
+        fieldValues.put("locked", "0");
         fieldValues.put("login_attempts", "0");
 
 
@@ -200,14 +176,17 @@ public class LoginTeacher implements HttpHandler {
     private void sendResponse(HttpServerExchange exchange, int statusCode, String jsonData) {
         exchange.setStatusCode(statusCode);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+        exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), "*");
+        exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Methods"), "POST, GET, OPTIONS, PUT, PATCH, DELETE");
+        exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Headers"), "*");
         exchange.getResponseSender().send(jsonData);
     }
 
 
     private String generateToken(int teacherId) {
         long timestamp = Instant.now().getEpochSecond();
-        // 5 minutes from now
-        long expiryTime = timestamp + (10 * 60);
+        // 60 minutes from now
+        long expiryTime = timestamp + (60 * 60);
 
         String tokenRaw = teacherId + ":" + expiryTime + ":" + Math.random();
         String token = Base64.getEncoder().encodeToString(tokenRaw.getBytes());
@@ -215,15 +194,15 @@ public class LoginTeacher implements HttpHandler {
         System.out.println("Generated token: " + token);
         return token;
     }
-    private void storeAuthDetails(int teacherId, String token) {
-        LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(5);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private void storeAuthDetails(int teacherId, String token,String expiryDate) {
+//        LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(5);
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         Map<String, String> fieldValues = new HashMap<>();
         fieldValues.put("user_id", String.valueOf(teacherId));
         fieldValues.put("user_type", "teacher");
         fieldValues.put("token", token);
-        fieldValues.put("expiry_date", dtf.format(expiryDate));
+        fieldValues.put("expiry_date", expiryDate);
 
         Response response;
 
@@ -271,6 +250,9 @@ public class LoginTeacher implements HttpHandler {
         }
         // Token is invalid or expired
         return false;
+    }
+    public static int getAuthenticatedTeacherId() {
+        return authenticatedTeacherId;
     }
 
 

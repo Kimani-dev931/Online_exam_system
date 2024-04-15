@@ -16,40 +16,37 @@ public class RestAPIServer {
         try {
 
             String BASE_REST_API_URL = "/api/rest";
-//
 
             PathHandler pathHandler = Handlers.path()
-                    .addPrefixPath(BASE_REST_API_URL+"/reports", Routes.reports())
-                    .addPrefixPath(BASE_REST_API_URL+"/exam", Routes.exam())
-                    .addPrefixPath(BASE_REST_API_URL+"/classes", Routes.classes())
-                    .addPrefixPath(BASE_REST_API_URL+"/options", Routes.options())
-                    .addPrefixPath(BASE_REST_API_URL+"/questions", Routes.questions())
-                    .addPrefixPath(BASE_REST_API_URL+"/responses", Routes.responses())
-                    .addPrefixPath(BASE_REST_API_URL+"/students", Routes.student())
-                    .addPrefixPath(BASE_REST_API_URL+"/subjects", Routes.subjects())
-                    .addPrefixPath(BASE_REST_API_URL+"/teachers", Routes.teacher())
-                    .addPrefixPath(BASE_REST_API_URL+"/login", Routes.login())
-                    .addPrefixPath(BASE_REST_API_URL+"/refresh-token", Routes.refresh())
+                    .addPrefixPath(BASE_REST_API_URL + "/reports", Routes.reports())
+                    .addPrefixPath(BASE_REST_API_URL + "/exam", Routes.exam())
+                    .addPrefixPath(BASE_REST_API_URL + "/classes", Routes.classes())
+                    .addPrefixPath(BASE_REST_API_URL + "/options", Routes.options())
+                    .addPrefixPath(BASE_REST_API_URL + "/questions", Routes.questions())
+                    .addPrefixPath(BASE_REST_API_URL + "/responses", Routes.responses())
+                    .addPrefixPath(BASE_REST_API_URL + "/students", Routes.student())
+                    .addPrefixPath(BASE_REST_API_URL + "/subjects", Routes.subjects())
+                    .addPrefixPath(BASE_REST_API_URL + "/teachers", Routes.teacher())
+                    .addPrefixPath(BASE_REST_API_URL + "/login", Routes.login())
+                    .addPrefixPath(BASE_REST_API_URL + "/refresh-token", Routes.refresh())
+                    .addPrefixPath(BASE_REST_API_URL + "/change-password", Routes.changepassword())
 
-                    .addPrefixPath("/", new FallBack())
-                    ;
+                    .addPrefixPath("/", new FallBack());
 
             Undertow server = Undertow.builder()
                     .setServerOption(UndertowOptions.DECODE_URL, true)
                     .setServerOption(UndertowOptions.URL_CHARSET, StandardCharsets.UTF_8.name())
                     .setIoThreads(Integer.parseInt(config.getiothreads()))
                     .setWorkerThreads(Integer.parseInt(config.getiothreads()))
-                    .addHttpListener(Integer.parseInt(config.getundertowserverport()),config.getundertowserverhost())
+                    .addHttpListener(Integer.parseInt(config.getundertowserverport()), config.getundertowserverhost())
                     .setHandler(new CORSHandler(pathHandler))
                     .build();
 
             server.start();
 
-            System.out.println(" Rest API Server started at: " +config.getundertowserverhost()+ ":" + config.getundertowserverport());
+            System.out.println("Rest API Server started at: " + config.getundertowserverhost() + ":" + config.getundertowserverport());
             System.out.println();
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("Error starting RestAPIServer: (" + e.getMessage() + ")");
             e.printStackTrace();
             System.exit(-1);

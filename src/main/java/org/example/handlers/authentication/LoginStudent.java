@@ -27,7 +27,7 @@ public class LoginStudent implements HttpHandler {
                 String username = formData.getFirst("user_name").getValue();
                 String password = formData.getFirst("password").getValue();
 
-                Response response = authenticateTeacher(username, password);
+                Response response = authenticateStudent(username, password);
                 sendResponse(exchange, response.getStatusCode(), response.getData().toString());
             } catch (Exception e) {
                 sendResponse(exchange, 500, "{\"error\":\"Server error\"}");
@@ -37,7 +37,7 @@ public class LoginStudent implements HttpHandler {
         }
     }
 
-    private Response authenticateTeacher(String username, String password) {
+    private Response authenticateStudent(String username, String password) {
         try {
             String whereClause = "user_name = '" + username + "'";
             Response selectResponse = Dynamic_Controller.select("Student", java.util.Arrays.asList("student_id", "password"), whereClause, null, null, null, null, null, null, null, null);
@@ -50,7 +50,6 @@ public class LoginStudent implements HttpHandler {
             int studentId = responseData.getInt("student_id");
             Response lockStatusResponse = checkLockStatus(studentId);
             if (lockStatusResponse != null) {
-                // return response immediately without checking the password.
                 return lockStatusResponse;
             }
             String storedPassword = responseData.getString("password");
@@ -65,7 +64,7 @@ public class LoginStudent implements HttpHandler {
                 jsonData.put("message", "Hello " + username + ", you just logged in successfully.");
                 return new Response(200, jsonData);
             } else {
-                // Password does not match, increment login attempts
+
                 incrementLoginAttempts(studentId);
                 return new Response(403, new JSONObject().put("error", "Authentication failed, invalid password or username"));
             }
@@ -90,7 +89,7 @@ public class LoginStudent implements HttpHandler {
                 // Increment login attempts
                 int newAttempts = currentAttempts + 1;
                 // Check if account should be locked
-                boolean newIsLocked = newAttempts >= 3 || isLocked;
+                boolean newIsLocked = newAttempts >= 6 || isLocked;
 
                 Map<String, Object> updateFields = new HashMap<>();
                 updateFields.put("login_attempts", Integer.toString(newAttempts));
@@ -260,9 +259,9 @@ public class LoginStudent implements HttpHandler {
             if (responseData.length() > 0) {
 
                 LocalDateTime expiryDate = LocalDateTime.parse(responseData.getString("expiry_date"), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                // Check if the token has expired
+
                 if (expiryDate.isAfter(LocalDateTime.now())) {
-                    // Token is valid and not expired
+
                     return true;
                 }
             }
@@ -270,7 +269,7 @@ public class LoginStudent implements HttpHandler {
             e.printStackTrace();
 
         }
-        // Token is invalid or expired
+
         return false;
     }
 

@@ -3,6 +3,7 @@ package org.example.rest.base;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HttpString;
+import io.undertow.util.StatusCodes;
 
 public class CORSHandler implements HttpHandler{
 
@@ -14,12 +15,18 @@ public class CORSHandler implements HttpHandler{
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
+        exchange.getResponseHeaders().add(new HttpString("Access-Control-Max-Age"), "3600");
+        exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Methods"), "*");
+        exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Headers"), "*");
         exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), "*");
-        exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Methods"), "POST, GET, OPTIONS, PUT, PATCH, DELETE");
-        exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Headers"), "Content-Type,Accept,HandlerAuthorizationLayer,Authorization,AuthToken,RequestReference");
+        exchange.setStatusCode(200);
 
-        if (httpHandler != null) {
-            httpHandler.handleRequest(exchange);
+
+        if (exchange.getRequestMethod().equalToString("OPTIONS")) {
+            exchange.endExchange();
+            return;
         }
+
+        httpHandler.handleRequest(exchange);
     }
 }
