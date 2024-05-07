@@ -31,6 +31,21 @@ public class Filter {
         return parseExpression(filterString).trim();
     }
 
+
+//    public static String generateWhereClause(String filterString) {
+//        if (!filterString.contains(":") && isDateFormat(filterString)) {
+//            return filterString;  // Return the date string as it is if it matches the format
+//        }
+//        return parseExpression(filterString).trim();
+//    }
+//
+//    private static boolean isDateFormat(String input) {
+//        String datePattern = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$"; // Regex pattern to match date format
+//        return input.matches(datePattern);
+//    }
+//
+
+
     private static String parseExpression(String expression) {
         StringBuilder whereClause = new StringBuilder();
 
@@ -129,3 +144,6 @@ public class Filter {
 
 
 }
+
+
+

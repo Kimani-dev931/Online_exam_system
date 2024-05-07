@@ -100,10 +100,10 @@ public class MainApp {
             String usernameEncryptedAttribute = (String) xpath.compile("/DATABASE-CONFIG/USERNAME/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
             boolean shouldEncryptUsername = !"YES".equals(usernameEncryptedAttribute);
 
-            // Check if the "ENCRYPTED" attribute is set to "NO" for password
+
             String passwordEncryptedAttribute = (String) xpath.compile("/DATABASE-CONFIG/PASSWORD/@ENCRYPTED").evaluate(doc, XPathConstants.STRING);
             boolean shouldEncryptPassword = !"YES".equals(passwordEncryptedAttribute);
-            // Encrypt the username and password if needed
+
             if (shouldEncryptUsername) {
                 config.setUsername(encrypt(config.getUsername(), SECRET_KEY));
                 config.setUsernameEncrypted(true);
@@ -113,7 +113,7 @@ public class MainApp {
                 config.setPassword(encrypt(config.getPassword(), SECRET_KEY));
                 config.setPasswordEncrypted(true);
             }
-            // Update the XML with the modified data
+
             config.updateXmlElement(doc);
 
 
@@ -143,9 +143,9 @@ public class MainApp {
             RestAPIServer.start();
 
 
-//            String filterString = "first_name:lm:A";
-//            String whereClause = Filter.generateWhereClause(filterString);
-//            System.out.println(whereClause);
+            String filterString = "date_created:bt:2024-02-27,2024-02-30";
+            String whereClause = Filter.generateWhereClause(filterString);
+            System.out.println(whereClause);
 
 //            int teacherId = 2;
 //

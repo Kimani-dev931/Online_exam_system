@@ -22,7 +22,7 @@ public class FindAllClasses implements HttpHandler {
     public void handleRequest(HttpServerExchange exchange) {
         String token = extractToken(exchange);
 
-        // Validate the token
+
         if (token == null || !LoginTeacher.validateToken(token)) {
             sendResponse(exchange, 401, "{\"error\":\"Invalid or missing token\"}");
             return;

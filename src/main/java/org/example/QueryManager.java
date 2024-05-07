@@ -126,7 +126,7 @@ public class QueryManager {
                 query.append(" OFFSET ").append(offset);
             }
         }
-        // Adjusting LIMIT and OFFSET based on the database type
+
 //        if (limit != null) {
 //            if ("MySQL".equalsIgnoreCase(databaseType) || "PostgreSQL".equalsIgnoreCase(databaseType)) {
 //                query.append(" LIMIT ").append(limit);
@@ -134,7 +134,7 @@ public class QueryManager {
 //                    query.append(" OFFSET ").append(offset);
 //                }
 //            } else if ("MicrosoftSQL".equalsIgnoreCase(databaseType)) {
-//                // For SQL Server, OFFSET must be used with ORDER BY, so ensure orderBy is not empty
+
 //                if (orderBy == null || orderBy.isEmpty()) {
 //                    throw new SQLException("ORDER BY clause is required for OFFSET and FETCH with SQL Server");
 //                }

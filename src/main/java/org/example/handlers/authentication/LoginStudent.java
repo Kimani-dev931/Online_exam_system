@@ -86,9 +86,9 @@ public class LoginStudent implements HttpHandler {
                 int currentAttempts = selectData.getInt("login_attempts");
                 boolean isLocked = selectData.getBoolean("locked");
 
-                // Increment login attempts
+
                 int newAttempts = currentAttempts + 1;
-                // Check if account should be locked
+
                 boolean newIsLocked = newAttempts >= 6 || isLocked;
 
                 Map<String, Object> updateFields = new HashMap<>();
@@ -112,35 +112,6 @@ public class LoginStudent implements HttpHandler {
         }
     }
 
-//    private Response checkLockStatus(int teacherId) {
-//        // Fetch the locked status
-//        List<String> columns = List.of("locked");
-//        String whereClause = "user_id = " + teacherId + " AND user_type = 'teacher'";
-//        Response selectResponse = userauth.selectauth("userauth", columns, whereClause, null, null, null, null, null, null, "MySQL", null);
-//
-//        try {
-//            JSONObject selectData = new JSONObject(selectResponse.getData().toString());
-//            if (selectData.length() > 0) {
-//                boolean isLocked = selectData.getBoolean("locked");
-//
-//                if (isLocked) {
-//                    // Account is locked
-//                    return new Response(403, new JSONObject().put("error", "Your account is locked. Please consult the admin."));
-//                } else {
-//                    // Account is not locked, proceed with authentication
-//                    return null;
-//                }
-//            } else {
-
-//                return null;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-
-//            return new Response(500, new JSONObject().put("error", "Server error: " + e.getMessage()));
-//        }
-//    }
-
 
     private Response checkLockStatus(int studentId) {
         List<String> columns = List.of("locked");
@@ -149,9 +120,9 @@ public class LoginStudent implements HttpHandler {
 
         String responseDataStr = selectResponse.getData().toString().trim();
 
-        // Check if the response is an empty array or not JSON formatted data
+
         if ("[]".equals(responseDataStr) || (!responseDataStr.startsWith("{") && !responseDataStr.startsWith("["))) {
-            // No record found or bad format, proceed with authentication
+
             return null;
         }
 
@@ -161,10 +132,10 @@ public class LoginStudent implements HttpHandler {
             boolean isLocked = selectData.optBoolean("locked", false); // default to false if not found
 
             if (isLocked) {
-                // Account is locked
+
                 return new Response(403, new JSONObject().put("error", "Your account has been locked after three unsuccessful login attempts. Please consult the admin."));
             }
-            // Account is not locked, proceed with authentication
+
             return null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,7 +145,7 @@ public class LoginStudent implements HttpHandler {
     }
 
     public static Response resetAccountLock(int studentId) {
-        // Prepare the fields to be updated
+
         Map<String, String> fieldValues = new HashMap<>();
         // Reset the lock status
         fieldValues.put("locked", "0");
